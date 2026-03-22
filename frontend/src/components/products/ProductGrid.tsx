@@ -6,12 +6,17 @@ interface Props {
   items: MenuItem[];
 }
 
-const CATEGORY_ORDER = ["Hot Coffee", "Hot Drinks", "Cold Drinks", "Smoothies", "Food"];
+const PINNED_LAST = ["Add Ons", "Sizes"];
+
+function sortCategories(cats: string[]): string[] {
+  const pinned = PINNED_LAST.filter((c) => cats.includes(c));
+  const rest = cats.filter((c) => !PINNED_LAST.includes(c)).sort();
+  return [...rest, ...pinned];
+}
 
 export default function ProductGrid({ items }: Props) {
-  const categories = CATEGORY_ORDER.filter((cat) =>
-    items.some((i) => i.category === cat)
-  );
+  const raw = Array.from(new Set(items.map((i) => i.category)));
+  const categories = sortCategories(raw);
 
   return (
     <div className="space-y-6">

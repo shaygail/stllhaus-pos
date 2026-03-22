@@ -1,12 +1,21 @@
 import { SaleResponse } from "@/types";
 
 export default function OrderCard({ sale }: { sale: SaleResponse }) {
+  const orderLabel = sale.daily_order_number != null
+    ? `Order #${sale.daily_order_number}`
+    : `#${sale.id}`;
+
   return (
     <div className="border border-beige-200 rounded-xl p-4 bg-white shadow-sm">
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-xs text-cafe-warm">
-            #{sale.id} ·{" "}
+          <div className="flex items-center gap-2">
+            <p className="text-base font-bold text-cafe-brown">{orderLabel}</p>
+            {sale.customer_name && (
+              <span className="text-sm font-semibold text-cafe-dark">— {sale.customer_name}</span>
+            )}
+          </div>
+          <p className="text-xs text-cafe-warm mt-0.5">
             {new Date(sale.date).toLocaleString("en-NZ", {
               dateStyle: "medium",
               timeStyle: "short",

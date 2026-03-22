@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
+import BackendStatus from "@/components/layout/BackendStatus";
 
 export const metadata: Metadata = {
   title: "STLL Haus POS",
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-beige-100 text-cafe-dark antialiased">
         <div className="flex flex-col h-screen-safe">
           <Navbar />
+          <BackendStatus />
           <main className="flex-1 min-h-0">{children}</main>
         </div>
       </body>

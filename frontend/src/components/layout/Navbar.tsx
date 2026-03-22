@@ -4,8 +4,16 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 const NAV = [
-  { href: "/",          label: "POS" },
-  { href: "/dashboard", label: "Sales" },
+  { href: "/",                label: "POS" },
+  { href: "/dashboard",      label: "Sales" },
+  { href: "/menu-management", label: "Menu" },
+  { href: "/pre-orders",     label: "Pre-Orders" },
+  { href: "/expenses",       label: "Expenses" },
+  { href: "/funds",          label: "Funds" },
+  { href: "/tabs",           label: "Tabs" },
+  { href: "/inventory",      label: "Inventory" },
+  { href: "/assets",         label: "Assets" },
+  { href: "/analytics",      label: "Analytics" },
 ];
 
 export default function Navbar() {

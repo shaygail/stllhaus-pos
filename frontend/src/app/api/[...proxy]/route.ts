@@ -41,3 +41,33 @@ export async function POST(
   });
 }
 
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { proxy: string[] } }
+) {
+  const body = await req.text();
+  return proxy(req, params.proxy.join("/"), {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { proxy: string[] } }
+) {
+  const body = await req.text();
+  return proxy(req, params.proxy.join("/"), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { proxy: string[] } }
+) {
+  return proxy(req, params.proxy.join("/"), { method: "DELETE" });
+}

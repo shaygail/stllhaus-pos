@@ -1,4 +1,8 @@
-from pydantic import BaseSettings
+# Old (Pydantic v1)
+# from pydantic import BaseSettings
+
+# New (Pydantic v2)
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     DATABASE_URL: str

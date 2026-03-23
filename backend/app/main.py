@@ -31,7 +31,6 @@ DEFAULT_MENU = [
 
 async def ensure_menu_availability_columns() -> None:
     async with engine.begin() as conn:
-        # PostgreSQL version - check information_schema instead of PRAGMA
         result = await conn.execute(text("""
             SELECT column_name FROM information_schema.columns 
             WHERE table_name = 'menu_items'
@@ -67,7 +66,7 @@ async def lifespan(app: FastAPI):
         if count_result.scalar() == 0:
             db.add_all([MenuItemDB(**item) for item in DEFAULT_MENU])
             await db.commit()
-        cutoff = datetime.now(timezone.utc) - timedelta(days=365)
+        cutoff = datetime.utcnow() - timedelta(days=365)
         await db.execute(sql_delete(Sale).where(Sale.date < cutoff))
         await db.commit()
         break

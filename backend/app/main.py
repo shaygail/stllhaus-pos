@@ -31,18 +31,25 @@ DEFAULT_MENU = [
 
 async def ensure_menu_availability_columns() -> None:
     async with engine.begin() as conn:
-        result = await conn.execute(text("PRAGMA table_info(menu_items)"))
-        existing_columns = {row[1] for row in result.fetchall()}
+        # PostgreSQL version - check information_schema instead of PRAGMA
+        result = await conn.execute(text("""
+            SELECT column_name FROM information_schema.columns 
+            WHERE table_name = 'menu_items'
+        """))
+        existing_columns = {row[0] for row in result.fetchall()}
         if "is_hidden" not in existing_columns:
-            await conn.execute(text("ALTER TABLE menu_items ADD COLUMN is_hidden BOOLEAN NOT NULL DEFAULT 0"))
+            await conn.execute(text("ALTER TABLE menu_items ADD COLUMN is_hidden BOOLEAN NOT NULL DEFAULT FALSE"))
         if "is_sold_out" not in existing_columns:
-            await conn.execute(text("ALTER TABLE menu_items ADD COLUMN is_sold_out BOOLEAN NOT NULL DEFAULT 0"))
+            await conn.execute(text("ALTER TABLE menu_items ADD COLUMN is_sold_out BOOLEAN NOT NULL DEFAULT FALSE"))
 
 
 async def ensure_sales_columns() -> None:
     async with engine.begin() as conn:
-        result = await conn.execute(text("PRAGMA table_info(sales)"))
-        existing_columns = {row[1] for row in result.fetchall()}
+        result = await conn.execute(text("""
+            SELECT column_name FROM information_schema.columns 
+            WHERE table_name = 'sales'
+        """))
+        existing_columns = {row[0] for row in result.fetchall()}
         if "daily_order_number" not in existing_columns:
             await conn.execute(text("ALTER TABLE sales ADD COLUMN daily_order_number INTEGER"))
         if "customer_name" not in existing_columns:
@@ -51,18 +58,15 @@ async def ensure_sales_columns() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Auto-create tables on startup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     await ensure_menu_availability_columns()
     await ensure_sales_columns()
     async for db in get_db():
-        # Seed default menu items if table is empty
         count_result = await db.execute(select(func.count()).select_from(MenuItemDB))
         if count_result.scalar() == 0:
             db.add_all([MenuItemDB(**item) for item in DEFAULT_MENU])
             await db.commit()
-        # Auto-purge sales older than 365 days
         cutoff = datetime.now(timezone.utc) - timedelta(days=365)
         await db.execute(sql_delete(Sale).where(Sale.date < cutoff))
         await db.commit()
@@ -74,7 +78,7 @@ app = FastAPI(title="STLL Haus POS", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins (LAN + localhost)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

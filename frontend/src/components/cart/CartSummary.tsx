@@ -30,15 +30,21 @@ export default function CartSummary() {
     setSuccessMsg(null);
     setErrorMsg(null);
     try {
-      await submitSale({ items, subtotal: itemsTotal, discount: discountAmt || undefined, payment_method: paymentMethod, customer_name: customerName.trim() || undefined });
-      setSuccessMsg(`Sale recorded! $${total.toFixed(2)} via ${paymentMethod}`);
+      await submitSale({
+        items,
+        subtotal: itemsTotal,
+        discount: discountAmt || undefined,
+        payment_method: paymentMethod,
+        customer_name: customerName.trim() || undefined,
+      });
+      setSuccessMsg(`Recorded $${total.toFixed(2)} · ${paymentMethod}`);
       clearCart();
       setCashGiven("");
       setCustomerName("");
       setDiscountInput("");
       setShowNumPad(false);
     } catch {
-      setErrorMsg("Failed to record sale. Is the backend running?");
+      setErrorMsg("Could not record sale. Is the backend running?");
     } finally {
       setLoading(false);
     }
@@ -53,36 +59,34 @@ export default function CartSummary() {
           onClose={() => setShowNumPad(false)}
         />
       )}
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3 shrink-0">
-        <h2 className="text-base font-bold text-cafe-dark">Current Order</h2>
+      <div className="flex items-center justify-between mb-4 shrink-0">
+        <h2 className="text-[10px] font-medium uppercase tracking-[0.2em] text-stll-muted">Current order</h2>
         {items.length > 0 && (
           <button
+            type="button"
             onClick={clearCart}
-            className="text-sm text-red-400 hover:text-red-600 underline touch-manipulation py-1 px-2"
+            className="text-xs text-stll-muted hover:text-red-600 touch-manipulation py-1 px-1"
           >
-            Clear all
+            Clear
           </button>
         )}
       </div>
 
-      {/* Customer name */}
-      <div className="shrink-0 mb-3">
+      <div className="shrink-0 mb-4">
         <input
           type="text"
-          placeholder="Customer name (optional)"
+          placeholder="Customer (optional)"
           value={customerName}
           onChange={(e) => setCustomerName(e.target.value)}
-          className="w-full border border-beige-200 rounded-xl px-4 py-2.5 text-sm text-cafe-dark placeholder-beige-300 focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white"
+          className="w-full border border-stll-charcoal/10 rounded-lg px-3 py-2.5 text-sm text-stll-charcoal placeholder-stll-muted/70 focus:outline-none focus:border-stll-accent/60 bg-stll-cream/30"
         />
       </div>
 
-      {/* Items list */}
       <div className="flex-1 overflow-y-auto min-h-0">
         {items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-cafe-warm/50 gap-2">
-            <span className="text-6xl">☕</span>
-            <p className="text-sm">Tap menu items to add</p>
+          <div className="flex flex-col items-center justify-center py-20 text-stll-muted/60 gap-2 text-center px-2">
+            <p className="text-xs uppercase tracking-[0.14em]">Empty</p>
+            <p className="text-sm text-stll-muted">Tap items on the menu to add.</p>
           </div>
         ) : (
           <div>
@@ -93,98 +97,115 @@ export default function CartSummary() {
         )}
       </div>
 
-      {/* Footer */}
-      <div className="shrink-0 border-t border-beige-300 pt-4 mt-3 space-y-3">
-        {/* Total */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-cafe-warm font-medium">Total</span>
-          <span className="text-3xl font-bold text-cafe-dark">${total.toFixed(2)}</span>
+      <div className="shrink-0 border-t border-stll-charcoal/10 pt-4 mt-2 space-y-3">
+        <div className="flex justify-between items-baseline">
+          <span className="text-xs uppercase tracking-[0.12em] text-stll-muted">Total</span>
+          <span className="text-2xl font-medium text-stll-charcoal tabular-nums">${total.toFixed(2)}</span>
         </div>
 
-        {/* Discount */}
         <div className="flex items-center gap-2">
-          <label className="text-sm text-cafe-warm font-medium whitespace-nowrap">Discount</label>
+          <label className="text-xs text-stll-muted whitespace-nowrap">Discount</label>
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cafe-warm text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stll-muted text-sm">$</span>
             <input
-              type="number" min="0" step="0.01" placeholder="0.00"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
               value={discountInput}
               onChange={(e) => setDiscountInput(e.target.value)}
-              className="w-full border border-beige-200 rounded-xl pl-7 pr-3 py-2 text-sm text-cafe-dark placeholder-beige-300 focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white"
+              className="w-full border border-stll-charcoal/10 rounded-lg pl-7 pr-3 py-2 text-sm text-stll-charcoal placeholder-stll-muted/50 focus:outline-none focus:border-stll-accent/60 bg-white"
             />
           </div>
           {discountAmt > 0 && (
-            <button onClick={() => setDiscountInput("")} className="text-xs text-cafe-warm hover:text-red-500 transition-colors">✕</button>
+            <button
+              type="button"
+              onClick={() => setDiscountInput("")}
+              className="text-xs text-stll-muted hover:text-red-600 transition-colors px-1"
+              aria-label="Clear discount"
+            >
+              ×
+            </button>
           )}
         </div>
         {discountAmt > 0 && (
           <div className="flex justify-between items-center text-sm">
-            <span className="text-cafe-warm">After discount</span>
-            <span className="font-bold text-green-700">${total.toFixed(2)}</span>
+            <span className="text-stll-muted text-xs">After discount</span>
+            <span className="font-medium text-stll-charcoal tabular-nums">${total.toFixed(2)}</span>
           </div>
         )}
 
-        {/* Payment method */}
         <div className="grid grid-cols-2 gap-2">
           {(["Cash", "Bank Transfer"] as PaymentMethod[]).map((method) => (
             <button
+              type="button"
               key={method}
-              onClick={() => { setPaymentMethod(method); setCashGiven(""); }}
-              className={`py-4 rounded-xl text-sm font-semibold transition-all touch-manipulation border-2 ${
+              onClick={() => {
+                setPaymentMethod(method);
+                setCashGiven("");
+              }}
+              className={`py-3 rounded-lg text-xs font-medium uppercase tracking-wide transition-colors touch-manipulation border ${
                 paymentMethod === method
-                  ? "bg-cafe-brown text-white border-cafe-brown shadow-md"
-                  : "bg-white text-cafe-dark border-beige-200"
+                  ? "border-stll-charcoal bg-stll-charcoal text-stll-cream"
+                  : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25 hover:text-stll-charcoal"
               }`}
             >
-              {method === "Cash" ? "💵 Cash" : "🏦 Transfer"}
+              {method === "Cash" ? "Cash" : "Transfer"}
             </button>
           ))}
         </div>
 
-        {/* Cash given + change */}
         {paymentMethod === "Cash" && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <label className="text-sm text-cafe-warm font-medium whitespace-nowrap">Cash given</label>
+              <label className="text-xs text-stll-muted whitespace-nowrap">Cash given</label>
               <button
+                type="button"
                 onPointerDown={() => setShowNumPad(true)}
-                className="relative flex-1 flex items-center justify-between pl-4 pr-4 py-3 rounded-xl border-2 border-beige-200 bg-white text-cafe-dark font-semibold text-lg touch-manipulation active:border-cafe-brown transition-colors text-right"
+                className="relative flex-1 flex items-center justify-between pl-3 pr-3 py-2.5 rounded-lg border border-stll-charcoal/10 bg-white text-stll-charcoal font-medium text-base touch-manipulation hover:border-stll-charcoal/20 transition-colors text-right tabular-nums"
               >
-                <span className="text-cafe-warm font-semibold">$</span>
-                <span className={cashGiven ? "text-cafe-dark" : "text-beige-300"}>
+                <span className="text-stll-muted text-sm">$</span>
+                <span className={cashGiven ? "text-stll-charcoal" : "text-stll-muted/40"}>
                   {cashGiven || "0.00"}
                 </span>
               </button>
             </div>
             {cashGiven !== "" && (
-              <div className={`flex justify-between items-center px-4 py-3 rounded-xl font-bold text-lg ${
-                change >= 0 ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"
-              }`}>
-                <span>{change >= 0 ? "Change" : "Short by"}</span>
+              <div
+                className={`flex justify-between items-center px-3 py-2.5 rounded-lg text-sm font-medium tabular-nums ${
+                  change >= 0
+                    ? "bg-stll-sage/15 text-stll-charcoal border border-stll-sage/25"
+                    : "bg-red-50 text-red-700 border border-red-100"
+                }`}
+              >
+                <span>{change >= 0 ? "Change" : "Short"}</span>
                 <span>${Math.abs(change).toFixed(2)}</span>
               </div>
             )}
           </div>
         )}
 
-        {/* Complete Sale */}
         <button
+          type="button"
           onClick={handleCompleteSale}
-          disabled={items.length === 0 || loading || (paymentMethod === "Cash" && cashGiven !== "" && change < 0)}
-          className="w-full py-5 rounded-2xl bg-cafe-brown text-white text-lg font-bold shadow-lg hover:bg-cafe-dark active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
+          disabled={
+            items.length === 0 ||
+            loading ||
+            (paymentMethod === "Cash" && cashGiven !== "" && change < 0)
+          }
+          className="w-full py-4 rounded-lg bg-stll-charcoal text-stll-cream text-sm font-medium uppercase tracking-[0.12em] hover:bg-stll-accent transition-colors disabled:opacity-35 disabled:cursor-not-allowed touch-manipulation"
         >
-          {loading ? "Processing…" : "✓  Complete Sale"}
+          {loading ? "Saving…" : "Complete sale"}
         </button>
 
-        {/* Feedback */}
         {successMsg && (
-          <p className="text-sm text-green-700 font-medium text-center bg-green-50 border border-green-200 rounded-xl p-3">
-            ✓ {successMsg}
+          <p className="text-xs text-stll-charcoal text-center bg-stll-sage/10 border border-stll-sage/20 rounded-lg py-2.5 px-3">
+            {successMsg}
           </p>
         )}
         {errorMsg && (
-          <p className="text-sm text-red-600 font-medium text-center bg-red-50 border border-red-200 rounded-xl p-3">
-            ✗ {errorMsg}
+          <p className="text-xs text-red-700 text-center bg-red-50 border border-red-100 rounded-lg py-2.5 px-3">
+            {errorMsg}
           </p>
         )}
       </div>

@@ -11,10 +11,10 @@ type LineItem = { name: string; qty: string; unit: string; cost: string };
 const BLANK_LINE = (): LineItem => ({ name: "", qty: "", unit: "cartons", cost: "" });
 
 const CAT_STYLE: Record<Category, string> = {
-  Ingredients: "bg-green-100 text-green-700",
-  Packaging:   "bg-blue-100 text-blue-700",
-  Equipment:   "bg-purple-100 text-purple-700",
-  Other:       "bg-amber-100 text-amber-700",
+  Ingredients: "border border-stll-charcoal/10 bg-stll-cream/50 text-stll-charcoal",
+  Packaging: "border border-stll-accent/25 bg-stll-cream/30 text-stll-charcoal",
+  Equipment: "border border-stll-charcoal/10 bg-white text-stll-muted",
+  Other: "border border-stll-charcoal/10 bg-white text-stll-muted",
 };
 
 function getCurrentMonthDays() {
@@ -165,112 +165,133 @@ export default function ExpensesPage() {
   })).filter((g) => g.total > 0);
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-cafe-dark mb-5">Expenses</h1>
+    <div className="stll-page">
+      <div className="stll-page-inner max-w-2xl pb-20">
+        <h1 className="stll-h1">Expenses</h1>
 
-        {error && <div className="bg-red-100 border border-red-300 text-red-700 rounded-lg p-3 mb-4 text-sm">{error}</div>}
+        {error && (
+          <div className="mb-4 rounded-lg border border-red-100 bg-red-50/80 p-3 text-sm text-red-800">{error}</div>
+        )}
 
-        {/* Add expense form */}
-        <div className="bg-white rounded-2xl border border-beige-200 shadow-sm p-4 mb-6">
-          <h2 className="text-sm font-semibold text-cafe-dark mb-3">Record an Expense</h2>
-          <form onSubmit={handleAdd} className="space-y-3">
+        <div className="stll-card mb-6 p-5">
+          <p className="stll-section-title mb-3">Record expense</p>
+          <form onSubmit={handleAdd} className="space-y-4">
 
-            {/* Date / Time / Category row */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Date</label>
-                <input type="date" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={expenseDate} onChange={(e) => setExpenseDate(e.target.value)} />
+                <label className="stll-section-title mb-1.5 block">Date</label>
+                <input type="date" className="stll-input" value={expenseDate} onChange={(e) => setExpenseDate(e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Time</label>
-                <input type="time" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={expenseTime} onChange={(e) => setExpenseTime(e.target.value)} />
+                <label className="stll-section-title mb-1.5 block">Time</label>
+                <input type="time" className="stll-input" value={expenseTime} onChange={(e) => setExpenseTime(e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Category</label>
-                <select className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
-                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                <label className="stll-section-title mb-1.5 block">Category</label>
+                <select
+                  className="stll-input bg-white"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as Category)}
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
 
-            {/* Paid From toggle */}
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Paid From</label>
+              <label className="stll-section-title mb-2 block">Paid from</label>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setPaidFrom("sales")}
-                  className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
+                  className={`flex-1 rounded-lg border py-2.5 text-xs font-medium uppercase tracking-wide transition-colors ${
                     paidFrom === "sales"
-                      ? "bg-cafe-brown text-white border-cafe-brown"
-                      : "bg-white text-cafe-dark border-beige-200 hover:border-cafe-warm"
+                      ? "border-stll-charcoal bg-stll-charcoal text-stll-cream"
+                      : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25"
                   }`}
                 >
-                  💰 Sales Money
+                  Sales
                 </button>
                 <button
                   type="button"
                   onClick={() => setPaidFrom("own")}
-                  className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
+                  className={`flex-1 rounded-lg border py-2.5 text-xs font-medium uppercase tracking-wide transition-colors ${
                     paidFrom === "own"
-                      ? "bg-amber-500 text-white border-amber-500"
-                      : "bg-white text-cafe-dark border-beige-200 hover:border-cafe-warm"
+                      ? "border-stll-sage bg-stll-sage/25 text-stll-charcoal"
+                      : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25"
                   }`}
                 >
-                  👛 Own Money
+                  Own
                 </button>
               </div>
             </div>
 
             {/* Line items */}
             <div className="space-y-2">
-              <div className="grid grid-cols-[1fr_70px_80px_80px_28px] gap-1.5 text-[10px] font-semibold text-cafe-warm uppercase tracking-wide px-1">
-                <span>Item Name</span><span className="text-center">Qty</span><span className="text-center">Unit</span><span className="text-right">Cost/unit</span><span></span>
+              <div className="grid grid-cols-[1fr_70px_80px_80px_28px] gap-1.5 px-1 text-[10px] font-medium uppercase tracking-[0.14em] text-stll-muted">
+                <span>Item</span>
+                <span className="text-center">Qty</span>
+                <span className="text-center">Unit</span>
+                <span className="text-right">Cost</span>
+                <span />
               </div>
               {lineItems.map((line, i) => {
                 const lt = lineTotal(line);
                 return (
-                  <div key={i} className="grid grid-cols-[1fr_70px_80px_80px_28px] gap-1.5 items-center">
+                  <div key={i} className="grid grid-cols-[1fr_70px_80px_80px_28px] items-center gap-1.5">
                     <input
                       value={line.name}
-                      onChange={e => updateLine(i, "name", e.target.value)}
-                      placeholder="e.g. Oat Milk"
-                      className="border border-beige-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown"
+                      onChange={(e) => updateLine(i, "name", e.target.value)}
+                      placeholder="e.g. Oat milk"
+                      className="stll-input py-1.5 text-sm"
                     />
                     <input
-                      type="number" min="0.01" step="any"
+                      type="number"
+                      min="0.01"
+                      step="any"
                       value={line.qty}
-                      onChange={e => updateLine(i, "qty", e.target.value)}
+                      onChange={(e) => updateLine(i, "qty", e.target.value)}
                       placeholder="6"
-                      className="border border-beige-300 rounded-lg px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-cafe-brown"
+                      className="stll-input py-1.5 text-center text-sm"
                     />
                     <select
                       value={line.unit}
-                      onChange={e => updateLine(i, "unit", e.target.value)}
-                      className="border border-beige-300 rounded-lg px-1 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white"
+                      onChange={(e) => updateLine(i, "unit", e.target.value)}
+                      className="stll-input bg-white py-1.5 text-sm"
                     >
-                      {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+                      {UNITS.map((u) => (
+                        <option key={u} value={u}>
+                          {u}
+                        </option>
+                      ))}
                     </select>
                     <div className="relative">
-                      <span className="absolute left-2 top-1/2 -translate-y-1/2 text-cafe-warm text-xs">$</span>
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-stll-muted">$</span>
                       <input
-                        type="number" min="0" step="0.01"
+                        type="number"
+                        min="0"
+                        step="0.01"
                         value={line.cost}
-                        onChange={e => updateLine(i, "cost", e.target.value)}
+                        onChange={(e) => updateLine(i, "cost", e.target.value)}
                         placeholder="0.00"
-                        className="w-full border border-beige-300 rounded-lg pl-5 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown"
+                        className="stll-input w-full py-1.5 pl-6 pr-2 text-sm"
                       />
                     </div>
                     <button
                       type="button"
-                      onClick={() => lineItems.length > 1 ? removeLine(i) : setLineItems([BLANK_LINE()])}
-                      className="text-red-300 hover:text-red-500 text-base leading-none transition-colors text-center"
+                      onClick={() => (lineItems.length > 1 ? removeLine(i) : setLineItems([BLANK_LINE()]))}
+                      className="text-center text-lg leading-none text-stll-muted transition-colors hover:text-red-600"
                       title="Remove"
-                    >✕</button>
+                    >
+                      ×
+                    </button>
                     {lt != null && (
-                      <div className="col-span-5 text-right text-xs text-cafe-warm pr-8">
-                        = <span className="font-semibold text-cafe-dark">${lt.toFixed(2)}</span>
+                      <div className="col-span-5 text-right text-xs text-stll-muted pr-8">
+                        = <span className="font-semibold text-stll-charcoal">${lt.toFixed(2)}</span>
                       </div>
                     )}
                   </div>
@@ -278,39 +299,38 @@ export default function ExpensesPage() {
               })}
             </div>
 
-            <button type="button" onClick={addLine} className="text-xs text-cafe-brown font-semibold hover:text-cafe-dark transition-colors">
-              + Add another item
+            <button
+              type="button"
+              onClick={addLine}
+              className="text-xs font-medium uppercase tracking-wide text-stll-accent transition-colors hover:text-stll-charcoal"
+            >
+              + Add line
             </button>
 
-            {/* Total row */}
             {hasTotal && (
-              <div className="flex items-center justify-between bg-beige-50 rounded-xl px-4 py-2.5 border border-beige-200">
-                <span className="text-sm font-semibold text-cafe-dark">Total</span>
-                <span className="text-lg font-bold text-cafe-dark">${autoTotal.toFixed(2)}</span>
+              <div className="flex items-center justify-between rounded-lg border border-stll-charcoal/10 bg-stll-cream/40 px-4 py-3">
+                <span className="text-xs font-medium uppercase tracking-[0.12em] text-stll-muted">Total</span>
+                <span className="text-lg font-medium tabular-nums text-stll-charcoal">${autoTotal.toFixed(2)}</span>
               </div>
             )}
 
             {formError && <p className="text-xs text-red-600">{formError}</p>}
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full py-2.5 bg-cafe-brown text-white text-sm font-semibold rounded-xl hover:bg-cafe-dark disabled:opacity-60 transition-colors"
-            >
-              {submitting ? "Adding…" : `+ Add Expense${hasTotal ? ` ($${autoTotal.toFixed(2)})` : ""}`}
+            <button type="submit" disabled={submitting} className="stll-btn-primary w-full uppercase tracking-wide">
+              {submitting ? "Saving…" : hasTotal ? `Save · $${autoTotal.toFixed(2)}` : "Save expense"}
             </button>
           </form>
         </div>
 
-        {/* Day tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-5">
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-1">
           {days.map((day) => (
             <button
               key={day.value}
+              type="button"
               onClick={() => setSelectedDate(day.value)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all border-2 ${
+              className={`shrink-0 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                 selectedDate === day.value
-                  ? "bg-cafe-brown text-white border-cafe-brown shadow-md"
-                  : "bg-white text-cafe-dark border-beige-200 hover:border-cafe-warm"
+                  ? "border-stll-charcoal bg-stll-charcoal text-stll-cream"
+                  : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25 hover:text-stll-charcoal"
               }`}
             >
               {day.label}
@@ -318,24 +338,33 @@ export default function ExpensesPage() {
           ))}
         </div>
 
-        {/* Summary cards */}
         {!loading && expenses.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 mb-5">
-            <div className="bg-red-50 border border-red-100 rounded-2xl p-4">
-              <p className="text-[11px] text-red-400 uppercase tracking-widest font-semibold">Total Expenses</p>
-              <p className="text-2xl font-bold text-red-600 mt-1">${totalExpenses.toFixed(2)}</p>
-              <div className="mt-2 space-y-0.5">
-                {salesTotal > 0 && <p className="text-[11px] text-cafe-warm">💰 Sales: <span className="font-semibold text-cafe-dark">${salesTotal.toFixed(2)}</span></p>}
-                {ownTotal > 0 && <p className="text-[11px] text-amber-600">👛 Own: <span className="font-semibold">${ownTotal.toFixed(2)}</span></p>}
+          <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="stll-card border-l-2 border-l-stll-accent p-4">
+              <p className="stll-section-title mb-1">Day total</p>
+              <p className="text-2xl font-medium tabular-nums text-stll-charcoal">${totalExpenses.toFixed(2)}</p>
+              <div className="mt-3 space-y-1 border-t border-stll-charcoal/10 pt-3 text-xs text-stll-muted">
+                {salesTotal > 0 && (
+                  <p>
+                    From sales <span className="font-medium tabular-nums text-stll-charcoal">${salesTotal.toFixed(2)}</span>
+                  </p>
+                )}
+                {ownTotal > 0 && (
+                  <p>
+                    Own funds <span className="font-medium tabular-nums text-stll-charcoal">${ownTotal.toFixed(2)}</span>
+                  </p>
+                )}
               </div>
             </div>
-            <div className="bg-white border border-beige-200 rounded-2xl p-4">
-              <p className="text-[11px] text-cafe-warm uppercase tracking-widest font-semibold">By Category</p>
-              <div className="mt-1 space-y-0.5">
+            <div className="stll-card p-4">
+              <p className="stll-section-title mb-2">By category</p>
+              <div className="space-y-2">
                 {byCategory.map(({ cat, total }) => (
-                  <div key={cat} className="flex justify-between text-xs">
-                    <span className={`px-1.5 py-0.5 rounded font-medium ${CAT_STYLE[cat as Category]}`}>{cat}</span>
-                    <span className="font-semibold text-cafe-dark">${total.toFixed(2)}</span>
+                  <div key={cat} className="flex items-center justify-between gap-2 text-xs">
+                    <span className={`rounded px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${CAT_STYLE[cat as Category]}`}>
+                      {cat}
+                    </span>
+                    <span className="font-medium tabular-nums text-stll-charcoal">${total.toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -343,52 +372,57 @@ export default function ExpensesPage() {
           </div>
         )}
 
-        {/* Expense list */}
         {loading ? (
-          <p className="text-center text-cafe-warm py-10 animate-pulse">Loading…</p>
+          <p className="animate-pulse py-12 text-center text-stll-muted">Loading…</p>
         ) : expenses.length === 0 ? (
-          <div className="text-center py-16 text-cafe-warm/50">
-            <p className="text-4xl mb-2">🧾</p>
-            <p className="text-sm">No expenses recorded for this day</p>
+          <div className="py-16 text-center text-stll-muted/70">
+            <p className="text-sm">No expenses for this day.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-beige-200 shadow-sm overflow-hidden">
-            <div className="px-4 py-3 bg-beige-50 border-b border-beige-200">
-              <p className="text-sm text-cafe-warm font-medium">{expenses.length} expense{expenses.length !== 1 ? "s" : ""}</p>
+          <div className="stll-card overflow-hidden shadow-none">
+            <div className="stll-card-header">
+              <p className="text-xs text-stll-muted">
+                {expenses.length} expense{expenses.length !== 1 ? "s" : ""}
+              </p>
             </div>
-            <div className="divide-y divide-beige-100">
+            <div className="divide-y divide-stll-charcoal/10">
               {expenses.map((exp) => (
-                <div key={exp.id} className="flex items-center justify-between px-4 py-3 hover:bg-beige-50 transition-colors">
-                  <div className="min-w-0 mr-3">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${CAT_STYLE[exp.category as Category]}`}>
+                <div
+                  key={exp.id}
+                  className="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-stll-cream/40"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <span className={`rounded px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${CAT_STYLE[exp.category as Category]}`}>
                         {exp.category}
                       </span>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
-                        (exp.paid_from ?? "sales") === "own"
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-green-100 text-green-700"
-                      }`}>
-                        {(exp.paid_from ?? "sales") === "own" ? "👛 Own" : "💰 Sales"}
+                      <span className="text-[10px] font-medium uppercase tracking-wide text-stll-muted">
+                        {(exp.paid_from ?? "sales") === "own" ? "Own" : "Sales"}
                       </span>
-                      <span className="text-xs text-cafe-warm">
+                      <span className="text-xs text-stll-muted/80">
                         {new Date(exp.date).toLocaleTimeString("en-NZ", { timeStyle: "short" })}
                       </span>
                     </div>
-                    <p className="text-sm text-cafe-dark truncate">{exp.description}</p>
+                    <p className="truncate text-sm text-stll-charcoal">{exp.description}</p>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <p className="text-base font-bold text-red-600">−${exp.amount.toFixed(2)}</p>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <p className="text-sm font-medium tabular-nums text-stll-charcoal">−${exp.amount.toFixed(2)}</p>
                     <button
+                      type="button"
                       onClick={() => openEditExpense(exp)}
-                      className="text-xs px-2 py-1 rounded-lg bg-beige-100 text-cafe-warm hover:bg-beige-200 transition-colors"
+                      className="rounded-lg border border-stll-charcoal/10 px-2 py-1 text-xs text-stll-muted transition-colors hover:border-stll-charcoal/25 hover:text-stll-charcoal"
                       title="Edit"
-                    >✏</button>
+                    >
+                      Edit
+                    </button>
                     <button
+                      type="button"
                       onClick={() => handleDelete(exp.id)}
-                      className="text-xs px-2 py-1 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 transition-colors"
+                      className="rounded-lg px-2 py-1 text-xs text-red-600/80 transition-colors hover:bg-red-50"
                       title="Delete"
-                    >✕</button>
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               ))}
@@ -397,51 +431,102 @@ export default function ExpensesPage() {
         )}
       </div>
 
-      {/* Edit Expense Modal */}
       {editExp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" onClick={e => e.target === e.currentTarget && setEditExp(null)}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => e.target === e.currentTarget && setEditExp(null)}
+          role="presentation"
+        >
+          <div className="stll-card w-full max-w-md space-y-4 p-6 shadow-sm" onClick={(e) => e.stopPropagation()} role="dialog" aria-labelledby="edit-expense-title">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-cafe-dark">Edit Expense</h3>
-              <button onClick={() => setEditExp(null)} className="text-cafe-warm hover:text-cafe-dark text-xl leading-none">×</button>
+              <h3 id="edit-expense-title" className="text-base font-medium text-stll-charcoal">
+                Edit expense
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditExp(null)}
+                className="text-stll-muted transition-colors hover:text-stll-charcoal"
+                aria-label="Close"
+              >
+                ×
+              </button>
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Description</label>
-              <input className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editForm.description} onChange={e => setEditForm(f => ({...f, description: e.target.value}))} />
+              <label className="stll-section-title mb-1.5 block">Description</label>
+              <input className="stll-input" value={editForm.description} onChange={(e) => setEditForm((f) => ({ ...f, description: e.target.value }))} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Category</label>
-                <select className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white" value={editForm.category} onChange={e => setEditForm(f => ({...f, category: e.target.value as Category}))}>
-                  {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                <label className="stll-section-title mb-1.5 block">Category</label>
+                <select
+                  className="stll-input bg-white"
+                  value={editForm.category}
+                  onChange={(e) => setEditForm((f) => ({ ...f, category: e.target.value as Category }))}
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c}>
+                      {c}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Amount ($)</label>
-                <input type="number" min="0.01" step="0.01" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editForm.amount} onChange={e => setEditForm(f => ({...f, amount: e.target.value}))} />
+                <label className="stll-section-title mb-1.5 block">Amount</label>
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  className="stll-input tabular-nums"
+                  value={editForm.amount}
+                  onChange={(e) => setEditForm((f) => ({ ...f, amount: e.target.value }))}
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Date</label>
-                <input type="date" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editForm.date} onChange={e => setEditForm(f => ({...f, date: e.target.value}))} />
+                <label className="stll-section-title mb-1.5 block">Date</label>
+                <input type="date" className="stll-input" value={editForm.date} onChange={(e) => setEditForm((f) => ({ ...f, date: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Time</label>
-                <input type="time" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editForm.time} onChange={e => setEditForm(f => ({...f, time: e.target.value}))} />
+                <label className="stll-section-title mb-1.5 block">Time</label>
+                <input type="time" className="stll-input" value={editForm.time} onChange={(e) => setEditForm((f) => ({ ...f, time: e.target.value }))} />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Paid From</label>
+              <label className="stll-section-title mb-2 block">Paid from</label>
               <div className="flex gap-2">
-                <button type="button" onClick={() => setEditForm(f => ({...f, paid_from: "sales"}))} className={`flex-1 py-1.5 rounded-xl text-xs font-semibold border-2 transition-all ${editForm.paid_from === "sales" ? "bg-cafe-brown text-white border-cafe-brown" : "bg-white text-cafe-dark border-beige-200"}`}>💰 Sales</button>
-                <button type="button" onClick={() => setEditForm(f => ({...f, paid_from: "own"}))} className={`flex-1 py-1.5 rounded-xl text-xs font-semibold border-2 transition-all ${editForm.paid_from === "own" ? "bg-amber-500 text-white border-amber-500" : "bg-white text-cafe-dark border-beige-200"}`}>👛 Own</button>
+                <button
+                  type="button"
+                  onClick={() => setEditForm((f) => ({ ...f, paid_from: "sales" }))}
+                  className={`flex-1 rounded-lg border py-2 text-xs font-medium uppercase tracking-wide transition-colors ${
+                    editForm.paid_from === "sales"
+                      ? "border-stll-charcoal bg-stll-charcoal text-stll-cream"
+                      : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25"
+                  }`}
+                >
+                  Sales
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditForm((f) => ({ ...f, paid_from: "own" }))}
+                  className={`flex-1 rounded-lg border py-2 text-xs font-medium uppercase tracking-wide transition-colors ${
+                    editForm.paid_from === "own"
+                      ? "border-stll-sage bg-stll-sage/25 text-stll-charcoal"
+                      : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25"
+                  }`}
+                >
+                  Own
+                </button>
               </div>
             </div>
             {editError && <p className="text-xs text-red-600">{editError}</p>}
             <div className="flex gap-3 pt-1">
-              <button onClick={() => setEditExp(null)} className="flex-1 py-2 rounded-xl border-2 border-beige-200 text-sm text-cafe-dark font-semibold hover:bg-beige-50 transition-colors">Cancel</button>
-              <button onClick={handleSaveExpense} disabled={editSaving} className="flex-1 py-2 rounded-xl bg-cafe-brown text-white text-sm font-semibold hover:bg-cafe-dark disabled:opacity-60 transition-colors">{editSaving ? "Saving…" : "Save Changes"}</button>
+              <button type="button" onClick={() => setEditExp(null)} className="stll-btn-secondary flex-1">
+                Cancel
+              </button>
+              <button type="button" onClick={handleSaveExpense} disabled={editSaving} className="stll-btn-primary flex-1">
+                {editSaving ? "Saving…" : "Save"}
+              </button>
             </div>
           </div>
         </div>

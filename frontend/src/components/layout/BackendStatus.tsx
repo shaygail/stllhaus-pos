@@ -22,9 +22,9 @@ export default function BackendStatus() {
   if (status === "ok" || status === "unknown") return null;
 
   return (
-    <div className="w-full bg-red-600 text-white text-center text-sm font-semibold py-2 px-4 flex items-center justify-center gap-2">
-      <span>⚠</span>
-      <span>Backend offline — sales cannot be recorded. Start the backend server to continue.</span>
+    <div className="w-full bg-red-700 text-white text-center text-xs font-medium tracking-wide py-2.5 px-4 flex items-center justify-center gap-2">
+      <span aria-hidden>!</span>
+      <span>Backend offline — start the server to record sales.</span>
     </div>
   );
 }

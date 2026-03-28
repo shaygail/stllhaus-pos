@@ -5,9 +5,9 @@ import { SaleResponse, ExpenseResponse, BalanceSummary, MenuItem } from "@/types
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-white rounded-2xl p-4 border border-beige-200 shadow-sm">
-      <p className="text-[11px] text-cafe-warm uppercase tracking-widest font-semibold">{label}</p>
-      <p className="text-2xl font-bold text-cafe-dark mt-1">{value}</p>
+    <div className="stll-card p-4">
+      <p className="stll-section-title mb-1">{label}</p>
+      <p className="text-xl font-medium tabular-nums text-stll-charcoal">{value}</p>
     </div>
   );
 }
@@ -201,49 +201,49 @@ export default function DashboardPage() {
   const netProfit = total - totalExpenses;
 
   return (
-    <div className="h-full overflow-y-auto p-6">
+    <div className="stll-page">
       {/* Edit sale modal */}
       {editSale && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
-            <h2 className="text-lg font-bold text-cafe-dark">Edit Sale #{editSale.id}</h2>
+          <div className="stll-card w-full max-w-sm space-y-4 p-6 shadow-sm">
+            <h2 className="text-base font-medium text-stll-charcoal">Edit sale #{editSale.id}</h2>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Date *</label>
-                <input type="date" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editDate} onChange={(e) => setEditDate(e.target.value)} />
+                <label className="block text-xs font-medium text-stll-muted mb-1">Date *</label>
+                <input type="date" className="w-full border border-stll-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent" value={editDate} onChange={(e) => setEditDate(e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Time *</label>
-                <input type="time" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editTime} onChange={(e) => setEditTime(e.target.value)} />
+                <label className="block text-xs font-medium text-stll-muted mb-1">Time *</label>
+                <input type="time" className="w-full border border-stll-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent" value={editTime} onChange={(e) => setEditTime(e.target.value)} />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Amount *</label>
+              <label className="block text-xs font-medium text-stll-muted mb-1">Amount *</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cafe-warm text-sm">$</span>
-                <input type="number" min="0" step="0.01" className="w-full border border-beige-300 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={editAmount} onChange={(e) => setEditAmount(e.target.value)} />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stll-muted text-sm">$</span>
+                <input type="number" min="0" step="0.01" className="w-full border border-stll-light rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent" value={editAmount} onChange={(e) => setEditAmount(e.target.value)} />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Payment *</label>
+              <label className="block text-xs font-medium text-stll-muted mb-1">Payment *</label>
               <div className="flex gap-2">
                 {(["Cash", "Bank Transfer"] as const).map((p) => (
-                  <button key={p} onClick={() => setEditPayment(p)} className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-colors ${editPayment === p ? "bg-cafe-brown text-white" : "bg-beige-100 text-cafe-warm hover:bg-beige-200"}`}>{p}</button>
+                  <button key={p} onClick={() => setEditPayment(p)} className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-colors ${editPayment === p ? "bg-stll-accent text-white" : "bg-stll-light text-stll-muted hover:bg-stll-cream"}`}>{p}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Customer (optional)</label>
-              <input className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" placeholder="e.g. Sarah" value={editCustomer} onChange={(e) => setEditCustomer(e.target.value)} />
+              <label className="block text-xs font-medium text-stll-muted mb-1">Customer (optional)</label>
+              <input className="w-full border border-stll-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent" placeholder="e.g. Sarah" value={editCustomer} onChange={(e) => setEditCustomer(e.target.value)} />
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Description (optional)</label>
-              <input className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" placeholder="e.g. 2x Matcha Latte" value={editDesc} onChange={(e) => setEditDesc(e.target.value)} />
+              <label className="block text-xs font-medium text-stll-muted mb-1">Description (optional)</label>
+              <input className="w-full border border-stll-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent" placeholder="e.g. 2x Matcha Latte" value={editDesc} onChange={(e) => setEditDesc(e.target.value)} />
             </div>
             {editError && <p className="text-xs text-red-600">{editError}</p>}
             <div className="flex gap-3 pt-1">
-              <button onClick={() => setEditSale(null)} className="flex-1 py-2.5 text-sm font-semibold bg-beige-100 text-cafe-warm rounded-xl hover:bg-beige-200 transition-colors">Cancel</button>
-              <button onClick={handleSaveEditSale} disabled={editSaving} className="flex-1 py-2.5 text-sm font-semibold bg-cafe-brown text-white rounded-xl hover:bg-cafe-dark disabled:opacity-60 transition-colors">{editSaving ? "Saving…" : "Save Changes"}</button>
+              <button onClick={() => setEditSale(null)} className="flex-1 py-2.5 text-sm font-semibold bg-stll-light text-stll-muted rounded-xl hover:bg-stll-cream transition-colors">Cancel</button>
+              <button onClick={handleSaveEditSale} disabled={editSaving} className="flex-1 py-2.5 text-sm font-semibold bg-stll-accent text-white rounded-xl hover:bg-stll-charcoal hover:text-white disabled:opacity-60 transition-colors">{editSaving ? "Saving…" : "Save Changes"}</button>
             </div>
           </div>
         </div>
@@ -252,95 +252,106 @@ export default function DashboardPage() {
       {/* Confirm reset modal */}
       {confirmReset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6">
-          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
-            <h2 className="text-lg font-bold text-cafe-dark">Reset ALL sales?</h2>
-            <p className="text-sm text-cafe-warm">
+          <div className="stll-card w-full max-w-sm space-y-4 p-6 shadow-sm">
+            <h2 className="text-base font-medium text-stll-charcoal">Reset all sales?</h2>
+            <p className="text-sm text-stll-muted">
               This will permanently delete <strong>all transactions across all days</strong> from the database. This cannot be undone.
             </p>
             <div className="grid grid-cols-2 gap-3 pt-1">
               <button
+                type="button"
                 onClick={() => setConfirmReset(false)}
-                className="py-3 rounded-xl border-2 border-beige-200 text-cafe-dark font-semibold text-sm hover:bg-beige-100 transition-colors touch-manipulation"
+                className="stll-btn-secondary w-full py-3 touch-manipulation sm:w-auto"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleReset}
                 disabled={resetting}
-                className="py-3 rounded-xl bg-red-500 text-white font-semibold text-sm hover:bg-red-600 active:scale-95 transition-all disabled:opacity-50 touch-manipulation"
+                className="w-full rounded-lg bg-red-600 py-3 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 touch-manipulation sm:w-auto"
               >
-                {resetting ? "Deleting\u2026" : "Yes, Reset"}
+                {resetting ? "Deleting…" : "Yes, Reset"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-cafe-dark">Sales Report</h1>
-          <div className="flex gap-2">
+      <div className="stll-page-inner max-w-4xl">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <h1 className="stll-h1 mb-0">Sales</h1>
+          <div className="flex flex-wrap gap-2">
             <button
-                onClick={() => { setShowManual(true); setManualDate(selectedDate); setManualTime("09:00"); setManualError(""); setManualCart({}); setManualCategory("all"); setManualDiscount(""); }}
-                className="px-4 py-2 rounded-xl bg-cafe-brown text-white text-sm font-semibold hover:bg-cafe-dark transition-colors"
-              >
-                + Past Sale
-              </button>
-              <button
-                onClick={() => setConfirmReset(true)}
-                className="px-4 py-2 rounded-xl border-2 border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition-colors touch-manipulation"
-              >
-                🗑 Reset All
-              </button>
-              <a
-                href={exportSalesUrl(selectedDate)}
-                download
-                className="px-4 py-2 rounded-xl bg-beige-200 text-cafe-dark text-sm font-semibold hover:bg-beige-300 transition-colors"
-              >
-                ↓ Export
-              </a>
-            </div>
+              type="button"
+              onClick={() => {
+                setShowManual(true);
+                setManualDate(selectedDate);
+                setManualTime("09:00");
+                setManualError("");
+                setManualCart({});
+                setManualCategory("all");
+                setManualDiscount("");
+              }}
+              className="stll-btn-secondary text-xs uppercase tracking-wide"
+            >
+              Past sale
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmReset(true)}
+              className="rounded-lg border border-red-200 px-4 py-2 text-xs font-medium uppercase tracking-wide text-red-600 transition-colors hover:bg-red-50 touch-manipulation"
+            >
+              Reset all
+            </button>
+            <a
+              href={exportSalesUrl(selectedDate)}
+              download
+              className="stll-btn-primary text-xs uppercase tracking-wide"
+            >
+              Export
+            </a>
           </div>
+        </div>
 
           {/* Manual past-sale entry modal */}
           {showManual && (
             <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-4 overflow-y-auto">
-              <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl my-4 flex flex-col">
+              <div className="bg-white rounded-lg shadow-sm w-full max-w-2xl my-4 flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-beige-200">
-                  <h2 className="text-lg font-bold text-cafe-dark">Add Past Sale</h2>
-                  <button onClick={() => setShowManual(false)} className="text-cafe-warm hover:text-cafe-dark text-xl font-bold">✕</button>
+                <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-stll-charcoal/10">
+                  <h2 className="text-lg font-bold text-stll-charcoal">Add Past Sale</h2>
+                  <button onClick={() => setShowManual(false)} className="text-stll-muted hover:text-stll-charcoal text-xl font-bold">✕</button>
                 </div>
 
                 {/* Date / Time / Payment / Customer */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pt-4 pb-2">
                   <div>
-                    <label className="block text-xs font-medium text-cafe-warm mb-1">Date *</label>
-                    <input type="date" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={manualDate} onChange={(e) => setManualDate(e.target.value)} />
+                    <label className="block text-xs font-medium text-stll-muted mb-1">Date *</label>
+                    <input type="date" className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" value={manualDate} onChange={(e) => setManualDate(e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-cafe-warm mb-1">Time *</label>
-                    <input type="time" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" value={manualTime} onChange={(e) => setManualTime(e.target.value)} />
+                    <label className="block text-xs font-medium text-stll-muted mb-1">Time *</label>
+                    <input type="time" className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" value={manualTime} onChange={(e) => setManualTime(e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-cafe-warm mb-1">Payment *</label>
+                    <label className="block text-xs font-medium text-stll-muted mb-1">Payment *</label>
                     <div className="flex gap-1.5">
                       {(["Cash", "Bank Transfer"] as const).map((p) => (
-                        <button key={p} onClick={() => setManualPayment(p)} className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${manualPayment === p ? "bg-cafe-brown text-white" : "bg-beige-100 text-cafe-warm hover:bg-beige-200"}`}>{p === "Cash" ? "Cash" : "Bank"}</button>
+                        <button key={p} onClick={() => setManualPayment(p)} className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${manualPayment === p ? "bg-stll-charcoal text-white" : "bg-stll-cream/60 text-stll-muted hover:bg-stll-cream"}`}>{p === "Cash" ? "Cash" : "Bank"}</button>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-cafe-warm mb-1">Customer (optional)</label>
-                    <input className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" placeholder="e.g. Sarah" value={manualCustomer} onChange={(e) => setManualCustomer(e.target.value)} />
+                    <label className="block text-xs font-medium text-stll-muted mb-1">Customer (optional)</label>
+                    <input className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" placeholder="e.g. Sarah" value={manualCustomer} onChange={(e) => setManualCustomer(e.target.value)} />
                   </div>
                 </div>
 
                 {/* Category filter tabs */}
                 <div className="flex gap-2 overflow-x-auto px-5 pt-2 pb-2">
                   {menuCategories.map(cat => (
-                    <button key={cat} onClick={() => setManualCategory(cat)} className={`px-3 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap transition-colors ${manualCategory === cat ? "bg-cafe-brown text-white" : "bg-beige-100 text-cafe-warm hover:bg-beige-200"}`}>
+                    <button key={cat} onClick={() => setManualCategory(cat)} className={`px-3 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap transition-colors ${manualCategory === cat ? "bg-stll-charcoal text-white" : "bg-stll-cream/60 text-stll-muted hover:bg-stll-cream"}`}>
                       {cat === "all" ? "All" : cat}
                     </button>
                   ))}
@@ -355,54 +366,54 @@ export default function DashboardPage() {
                         key={item.id}
                         onClick={() => !item.is_sold_out && addToManualCart(item)}
                         disabled={item.is_sold_out}
-                        className={`relative rounded-xl border-2 p-3 text-left transition-all ${inCart ? "border-cafe-brown bg-cafe-brown/5" : "border-beige-200 bg-white hover:border-cafe-brown/50 hover:bg-beige-50"} ${item.is_sold_out ? "opacity-40 cursor-not-allowed" : ""}`}
+                        className={`relative rounded-xl border-2 p-3 text-left transition-all ${inCart ? "border-stll-charcoal bg-stll-charcoal/5" : "border-stll-charcoal/10 bg-white hover:border-stll-charcoal/50 hover:bg-stll-cream/50"} ${item.is_sold_out ? "opacity-40 cursor-not-allowed" : ""}`}
                       >
                         {inCart && (
-                          <span className="absolute top-1.5 right-1.5 bg-cafe-brown text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{inCart.qty}</span>
+                          <span className="absolute top-1.5 right-1.5 bg-stll-charcoal text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{inCart.qty}</span>
                         )}
-                        <p className="text-xs font-semibold text-cafe-dark leading-tight pr-4">{item.name}</p>
-                        <p className="text-xs text-cafe-warm mt-1">${item.price.toFixed(2)}</p>
+                        <p className="text-xs font-semibold text-stll-charcoal leading-tight pr-4">{item.name}</p>
+                        <p className="text-xs text-stll-muted mt-1">${item.price.toFixed(2)}</p>
                         {item.is_sold_out && <p className="text-[10px] text-red-400 mt-0.5">Sold out</p>}
                       </button>
                     );
                   })}
                   {filteredMenuItems.length === 0 && (
-                    <p className="col-span-4 text-center text-sm text-cafe-warm py-6">No items in this category.</p>
+                    <p className="col-span-4 text-center text-sm text-stll-muted py-6">No items in this category.</p>
                   )}
                 </div>
 
                 {/* Cart summary */}
                 {manualCartEntries.length > 0 && (
-                  <div className="mx-5 mb-3 bg-beige-50 rounded-xl p-3 border border-beige-200">
-                    <p className="text-xs font-semibold text-cafe-warm mb-2">Cart</p>
+                  <div className="mx-5 mb-3 bg-stll-cream/50 rounded-xl p-3 border border-stll-charcoal/10">
+                    <p className="text-xs font-semibold text-stll-muted mb-2">Cart</p>
                     <div className="space-y-1.5">
                       {manualCartEntries.map(({ item, qty }) => (
                         <div key={item.id} className="flex items-center gap-2 text-sm">
-                          <span className="flex-1 text-cafe-dark text-xs">{item.name}</span>
-                          <button onClick={() => removeFromManualCart(item.id)} className="w-6 h-6 rounded-full bg-beige-200 text-cafe-dark text-xs font-bold hover:bg-beige-300 flex items-center justify-center">−</button>
-                          <span className="w-5 text-center text-xs font-bold text-cafe-dark">{qty}</span>
-                          <button onClick={() => addToManualCart(item)} className="w-6 h-6 rounded-full bg-beige-200 text-cafe-dark text-xs font-bold hover:bg-beige-300 flex items-center justify-center">+</button>
-                          <span className="w-16 text-right text-xs text-cafe-warm">${(item.price * qty).toFixed(2)}</span>
+                          <span className="flex-1 text-stll-charcoal text-xs">{item.name}</span>
+                          <button onClick={() => removeFromManualCart(item.id)} className="w-6 h-6 rounded-full bg-stll-cream text-stll-charcoal text-xs font-bold hover:bg-stll-light flex items-center justify-center">−</button>
+                          <span className="w-5 text-center text-xs font-bold text-stll-charcoal">{qty}</span>
+                          <button onClick={() => addToManualCart(item)} className="w-6 h-6 rounded-full bg-stll-cream text-stll-charcoal text-xs font-bold hover:bg-stll-light flex items-center justify-center">+</button>
+                          <span className="w-16 text-right text-xs text-stll-muted">${(item.price * qty).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
-                    <div className="flex justify-between items-center mt-2 pt-2 border-t border-beige-200 gap-3">
+                    <div className="flex justify-between items-center mt-2 pt-2 border-t border-stll-charcoal/10 gap-3">
                       <div className="flex items-center gap-2 flex-1">
-                        <span className="text-xs text-cafe-warm whitespace-nowrap">Discount $</span>
+                        <span className="text-xs text-stll-muted whitespace-nowrap">Discount $</span>
                         <input
                           type="number" min="0" step="0.01" placeholder="0.00"
                           value={manualDiscount}
                           onChange={(e) => setManualDiscount(e.target.value)}
-                          className="flex-1 border border-beige-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-cafe-brown"
+                          className="flex-1 border border-stll-charcoal/10 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-stll-accent/50"
                         />
                       </div>
                       <div className="text-right">
                         {manualDiscountAmt > 0 && (
-                          <p className="text-[11px] text-cafe-warm line-through">${manualItemsTotal.toFixed(2)}</p>
+                          <p className="text-[11px] text-stll-muted line-through">${manualItemsTotal.toFixed(2)}</p>
                         )}
                         <div className="flex items-center gap-1">
-                          <span className="text-xs font-bold text-cafe-dark">Total</span>
-                          <span className="text-sm font-bold text-cafe-brown">${manualTotal.toFixed(2)}</span>
+                          <span className="text-xs font-bold text-stll-charcoal">Total</span>
+                          <span className="text-sm font-bold text-stll-accent">${manualTotal.toFixed(2)}</span>
                         </div>
                       </div>
                     </div>
@@ -413,8 +424,8 @@ export default function DashboardPage() {
                 <div className="px-5 pb-5 space-y-2">
                   {manualError && <p className="text-xs text-red-600">{manualError}</p>}
                   <div className="flex gap-3">
-                    <button onClick={() => setShowManual(false)} className="flex-1 py-2.5 text-sm font-semibold bg-beige-100 text-cafe-warm rounded-xl hover:bg-beige-200 transition-colors">Cancel</button>
-                    <button onClick={handleManualSave} disabled={manualSaving} className="flex-1 py-2.5 text-sm font-semibold bg-cafe-brown text-white rounded-xl hover:bg-cafe-dark disabled:opacity-60 transition-colors">{manualSaving ? "Saving…" : "Save Sale"}</button>
+                    <button onClick={() => setShowManual(false)} className="flex-1 py-2.5 text-sm font-semibold bg-stll-cream/60 text-stll-muted rounded-xl hover:bg-stll-cream transition-colors">Cancel</button>
+                    <button onClick={handleManualSave} disabled={manualSaving} className="flex-1 py-2.5 text-sm font-semibold bg-stll-charcoal text-white rounded-xl hover:bg-stll-accent disabled:opacity-60 transition-colors">{manualSaving ? "Saving…" : "Save Sale"}</button>
                   </div>
                 </div>
               </div>
@@ -427,10 +438,10 @@ export default function DashboardPage() {
             <button
               key={day.value}
               onClick={() => setSelectedDate(day.value)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all touch-manipulation border-2 ${
+              className={`shrink-0 rounded-lg border px-4 py-2 text-sm font-medium transition-colors touch-manipulation ${
                 selectedDate === day.value
-                  ? "bg-cafe-brown text-white border-cafe-brown shadow-md"
-                  : "bg-white text-cafe-dark border-beige-200 hover:border-cafe-warm"
+                  ? "border-stll-charcoal bg-stll-charcoal text-stll-cream"
+                  : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25 hover:text-stll-charcoal"
               }`}
             >
               {day.label}
@@ -447,74 +458,83 @@ export default function DashboardPage() {
         </div>
 
         {/* Available Funds */}
-        <p className="text-[11px] font-bold uppercase tracking-widest text-cafe-warm mb-2">Available Funds</p>
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <a href="/funds" className="block bg-green-50 border border-green-200 rounded-2xl p-4 shadow-sm hover:bg-green-100 transition-colors">
-            <p className="text-[11px] text-green-700 uppercase tracking-widest font-semibold">Cash in Hand</p>
-            <p className="text-2xl font-bold text-green-800 mt-1">${balance.cash.toFixed(2)}</p>
+        <p className="stll-section-title">Available funds</p>
+        <div className="mb-4 grid grid-cols-2 gap-3">
+          <a
+            href="/funds"
+            className="stll-card block border-l-2 border-l-stll-sage p-4 transition-colors hover:bg-stll-cream/30"
+          >
+            <p className="stll-section-title mb-1">Cash</p>
+            <p className="text-xl font-medium tabular-nums text-stll-charcoal">${balance.cash.toFixed(2)}</p>
           </a>
-          <a href="/funds" className="block bg-blue-50 border border-blue-200 rounded-2xl p-4 shadow-sm hover:bg-blue-100 transition-colors">
-            <p className="text-[11px] text-blue-700 uppercase tracking-widest font-semibold">Bank Balance</p>
-            <p className="text-2xl font-bold text-blue-800 mt-1">${balance.bank.toFixed(2)}</p>
+          <a
+            href="/funds"
+            className="stll-card block border-l-2 border-l-stll-accent p-4 transition-colors hover:bg-stll-cream/30"
+          >
+            <p className="stll-section-title mb-1">Bank</p>
+            <p className="text-xl font-medium tabular-nums text-stll-charcoal">${balance.bank.toFixed(2)}</p>
           </a>
         </div>
 
         {/* Expenses summary strip */}
         {totalExpenses > 0 && (
-          <div className="flex items-center justify-between bg-red-50 border border-red-100 rounded-2xl px-4 py-3 mb-5">
+          <div className="mb-5 flex items-center justify-between rounded-lg border border-red-100 bg-red-50/80 px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-red-600">🧾 Expenses deducted</span>
-              <span className="text-xs text-red-400">{expenses.length} item{expenses.length !== 1 ? "s" : ""}</span>
+              <span className="text-sm font-medium text-red-800">Expenses</span>
+              <span className="text-xs text-red-600/80">
+                {expenses.length} item{expenses.length !== 1 ? "s" : ""}
+              </span>
             </div>
-            <span className="text-base font-bold text-red-600">−${totalExpenses.toFixed(2)}</span>
+            <span className="text-base font-medium tabular-nums text-red-800">−${totalExpenses.toFixed(2)}</span>
           </div>
         )}
 
         {/* Table */}
         {loading ? (
-          <p className="text-cafe-warm text-center py-12 animate-pulse">Loading\u2026</p>
+          <p className="text-stll-muted text-center py-12 animate-pulse">Loading…</p>
         ) : sales.length === 0 ? (
-          <div className="text-center py-20 text-cafe-warm/50">
-            <p className="text-5xl mb-3">📋</p>
-            <p>No sales for this day</p>
+          <div className="py-20 text-center text-stll-muted/60">
+            <p className="text-sm">No sales for this day.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-sm border border-beige-200 overflow-hidden">
-            <div className="px-4 py-3 bg-beige-50 border-b border-beige-200">
-              <p className="text-sm text-cafe-warm font-medium">{sales.length} transaction{sales.length !== 1 ? "s" : ""}</p>
+          <div className="stll-card overflow-hidden shadow-none">
+            <div className="stll-card-header">
+              <p className="text-xs text-stll-muted">
+                {sales.length} transaction{sales.length !== 1 ? "s" : ""}
+              </p>
             </div>
             <table className="w-full text-sm">
-              <thead className="bg-beige-100">
+              <thead className="stll-table-thead">
                 <tr>
-                  <th className="text-left px-4 py-3 text-cafe-warm font-semibold">#</th>
-                  <th className="text-left px-4 py-3 text-cafe-warm font-semibold">Time</th>
-                  <th className="text-left px-4 py-3 text-cafe-warm font-semibold">Items</th>
-                  <th className="text-left px-4 py-3 text-cafe-warm font-semibold">Payment</th>
-                  <th className="text-right px-4 py-3 text-cafe-warm font-semibold">Total</th>
+                  <th className="px-4 py-3">#</th>
+                  <th className="px-4 py-3">Time</th>
+                  <th className="px-4 py-3">Items</th>
+                  <th className="px-4 py-3">Payment</th>
+                  <th className="px-4 py-3 text-right">Total</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-beige-100">
+              <tbody className="divide-y divide-stll-charcoal/10">
                 {sales.map((sale) => (
-                  <tr key={sale.id} className="hover:bg-beige-50 transition-colors">
-                    <td className="px-4 py-3 text-cafe-warm">#{sale.id}</td>
-                    <td className="px-4 py-3 text-cafe-dark whitespace-nowrap">
+                  <tr key={sale.id} className="hover:bg-stll-cream/50 transition-colors">
+                    <td className="px-4 py-3 text-stll-muted">#{sale.id}</td>
+                    <td className="px-4 py-3 text-stll-charcoal whitespace-nowrap">
                       {new Date(sale.date).toLocaleTimeString("en-NZ", { timeStyle: "short" })}
                     </td>
-                    <td className="px-4 py-3 text-cafe-dark">
+                    <td className="px-4 py-3 text-stll-charcoal">
                       {sale.items.map((i) => `${i.name} ×${i.quantity}`).join(", ")}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        sale.payment_method === "Cash"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}>
+                      <span
+                        className={`text-[10px] font-medium uppercase tracking-wide ${
+                          sale.payment_method === "Cash" ? "text-stll-sage" : "text-stll-muted"
+                        }`}
+                      >
                         {sale.payment_method}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className="font-bold text-cafe-dark">${(sale.subtotal - (sale.discount || 0)).toFixed(2)}</span>
+                      <span className="font-bold text-stll-charcoal">${(sale.subtotal - (sale.discount || 0)).toFixed(2)}</span>
                       {(sale.discount || 0) > 0 && (
                         <span className="block text-[10px] text-orange-500 font-medium">−${sale.discount.toFixed(2)} off</span>
                       )}
@@ -523,7 +543,7 @@ export default function DashboardPage() {
                       <div className="flex gap-1 justify-end">
                         <button
                           onClick={() => openEditSale(sale)}
-                          className="text-xs px-2 py-1 rounded-lg bg-beige-100 text-cafe-warm hover:bg-beige-200 transition-colors"
+                          className="text-xs px-2 py-1 rounded-lg bg-stll-cream/60 text-stll-muted hover:bg-stll-cream transition-colors"
                           title="Edit sale"
                         >✏</button>
                         <button
@@ -543,4 +563,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

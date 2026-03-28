@@ -1,23 +1,7 @@
 "use client";
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { downloadAnalyticsCsv } from "@/lib/analyticsCsv";
+import { useEffect, useState } from "react";
 import { fetchSales, fetchExpenses } from "@/lib/api";
 import { SaleResponse, ExpenseResponse } from "@/types";
-
-const ChartSkeleton = () => (
-  <div className="h-[300px] animate-pulse rounded-lg bg-stll-cream/50" aria-hidden />
-);
-
-const AnalyticsTrendChart = dynamic(
-  () => import("@/components/analytics/AnalyticsTrendChart"),
-  { ssr: false, loading: () => <ChartSkeleton /> }
-);
-
-const AnalyticsExpensePieChart = dynamic(
-  () => import("@/components/analytics/AnalyticsExpensePieChart"),
-  { ssr: false, loading: () => <ChartSkeleton /> }
-);
 
 function toLocalDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -39,56 +23,18 @@ function StatCard({ label, value, sub, color = "default" }: { label: string; val
   );
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const t = setTimeout(() => reject(new Error(`${label} timed out after ${ms / 1000}s`)), ms);
-    promise.then(
-      (v) => {
-        clearTimeout(t);
-        resolve(v);
-      },
-      (e) => {
-        clearTimeout(t);
-        reject(e);
-      }
-    );
-  });
-}
-
-const FETCH_TIMEOUT_MS = 25_000;
-
-type DayRow = { date: string; orders: number; revenue: number; expenses: number; net: number };
-
 export default function AnalyticsPage() {
   const [sales, setSales] = useState<SaleResponse[]>([]);
   const [expenses, setExpenses] = useState<ExpenseResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-
-  const loadData = useCallback(() => {
-    setLoading(true);
-    setLoadError(null);
-    Promise.all([
-      withTimeout(fetchSales(), FETCH_TIMEOUT_MS, "Sales"),
-      withTimeout(fetchExpenses(), FETCH_TIMEOUT_MS, "Expenses"),
-    ])
-      .then(([s, e]) => {
-        setSales(s);
-        setExpenses(e);
-      })
-      .catch((err: unknown) => {
-        console.error(err);
-        const msg = err instanceof Error ? err.message : "Could not load analytics.";
-        setLoadError(
-          `${msg} Check that BACKEND_URL is reachable (local: start the API on port 8000, or wait if Railway is waking up).`
-        );
-      })
-      .finally(() => setLoading(false));
-  }, []);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    setLoading(true);
+    Promise.all([fetchSales(), fetchExpenses()])
+      .then(([s, e]) => { setSales(s); setExpenses(e); })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   // ── All-time totals ────────────────────────────────────────────────────────
   const totalRevenue  = sales.reduce((s, r) => s + r.subtotal - (r.discount || 0), 0);
@@ -99,27 +45,28 @@ export default function AnalyticsPage() {
   const bankRevenue   = sales.filter((r) => r.payment_method === "Bank Transfer").reduce((s, r) => s + r.subtotal - (r.discount || 0), 0);
   const avgOrder      = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-  const dayRows = useMemo(() => {
-    const dayMap = new Map<string, DayRow>();
-    for (const s of sales) {
-      const raw = s.date.endsWith("Z") ? s.date.slice(0, -1) : s.date;
-      const key = toLocalDateStr(new Date(raw));
-      const row = dayMap.get(key) ?? { date: key, orders: 0, revenue: 0, expenses: 0, net: 0 };
-      row.orders++;
-      row.revenue = Math.round((row.revenue + s.subtotal - (s.discount || 0)) * 100) / 100;
-      dayMap.set(key, row);
-    }
-    for (const e of expenses) {
-      const raw = e.date.endsWith("Z") ? e.date.slice(0, -1) : e.date;
-      const key = toLocalDateStr(new Date(raw));
-      const row = dayMap.get(key) ?? { date: key, orders: 0, revenue: 0, expenses: 0, net: 0 };
-      row.expenses = Math.round((row.expenses + e.amount) * 100) / 100;
-      dayMap.set(key, row);
-    }
-    return Array.from(dayMap.values())
-      .map((r) => ({ ...r, net: Math.round((r.revenue - r.expenses) * 100) / 100 }))
-      .sort((a, b) => b.date.localeCompare(a.date));
-  }, [sales, expenses]);
+  // ── Per-day breakdown ─────────────────────────────────────────────────────
+  type DayRow = { date: string; orders: number; revenue: number; expenses: number; net: number };
+  const dayMap = new Map<string, DayRow>();
+
+  for (const s of sales) {
+    const raw = s.date.endsWith("Z") ? s.date.slice(0, -1) : s.date;
+    const key = toLocalDateStr(new Date(raw));
+    const row = dayMap.get(key) ?? { date: key, orders: 0, revenue: 0, expenses: 0, net: 0 };
+    row.orders++;
+    row.revenue = Math.round((row.revenue + s.subtotal - (s.discount || 0)) * 100) / 100;
+    dayMap.set(key, row);
+  }
+  for (const e of expenses) {
+    const raw = e.date.endsWith("Z") ? e.date.slice(0, -1) : e.date;
+    const key = toLocalDateStr(new Date(raw));
+    const row = dayMap.get(key) ?? { date: key, orders: 0, revenue: 0, expenses: 0, net: 0 };
+    row.expenses = Math.round((row.expenses + e.amount) * 100) / 100;
+    dayMap.set(key, row);
+  }
+  const dayRows = Array.from(dayMap.values())
+    .map((r) => ({ ...r, net: Math.round((r.revenue - r.expenses) * 100) / 100 }))
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   // ── Expense categories ────────────────────────────────────────────────────
   const catMap = new Map<string, number>();
@@ -145,40 +92,6 @@ export default function AnalyticsPage() {
     .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 10);
 
-  const chartData = useMemo(() => {
-    return [...dayRows]
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .slice(-90)
-      .map((r) => ({
-        date: r.date,
-        label: new Date(r.date + "T12:00:00").toLocaleDateString("en-NZ", {
-          day: "numeric",
-          month: "short",
-        }),
-        revenue: r.revenue,
-        expenses: r.expenses,
-      }));
-  }, [dayRows]);
-
-  const expensePieData = useMemo(
-    () => catRows.map(([name, value]) => ({ name, value })),
-    [catRows]
-  );
-
-  const handleExportCsv = () => {
-    downloadAnalyticsCsv({
-      totalRevenue,
-      totalExpenses,
-      totalOrders,
-      netProfit,
-      cashRevenue,
-      bankRevenue,
-      dayRows,
-      catRows,
-      topItems,
-    });
-  };
-
   if (loading) {
     return (
       <div className="stll-page flex items-center justify-center">
@@ -187,33 +100,12 @@ export default function AnalyticsPage() {
     );
   }
 
-  if (loadError) {
-    return (
-      <div className="stll-page">
-        <div className="stll-page-inner max-w-lg space-y-4">
-          <h1 className="stll-h1">Analytics</h1>
-          <div className="stll-card border-red-200 bg-red-50/80 p-4 text-sm text-red-900">
-            <p className="font-medium">Couldn&apos;t load data</p>
-            <p className="mt-2 text-red-800/90">{loadError}</p>
-          </div>
-          <button type="button" className="stll-btn-primary" onClick={loadData}>
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="stll-page">
       <div className="stll-page-inner max-w-4xl space-y-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <h1 className="stll-h1 mb-0">Analytics</h1>
-          <button type="button" className="stll-btn-secondary shrink-0 text-xs uppercase tracking-wide" onClick={handleExportCsv}>
-            Export CSV
-          </button>
-        </div>
-        {/* –– All-time headline cards –– */}
+
+        <h1 className="stll-h1">Reports</h1>
+
         <section>
           <p className="stll-section-title">All-time</p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -223,7 +115,8 @@ export default function AnalyticsPage() {
             <StatCard label="Avg Order Value" value={`$${avgOrder.toFixed(2)}`}      color="blue" />
           </div>
         </section>
-        {/* –– Payment method split –– */}
+
+        {/* ── Payment method split ── */}
         <section>
           <p className="stll-section-title">Payment breakdown</p>
           <div className="grid grid-cols-2 gap-3">
@@ -241,16 +134,6 @@ export default function AnalyticsPage() {
                 {totalRevenue > 0 ? Math.round((bankRevenue / totalRevenue) * 100) : 0}% of revenue
               </p>
             </div>
-          </div>
-        </section>
-
-        <section>
-          <p className="stll-section-title">Revenue &amp; expenses by day</p>
-          <p className="mb-3 text-xs text-stll-muted/80">
-            Last {chartData.length} day{chartData.length !== 1 ? "s" : ""} with activity (up to 90).
-          </p>
-          <div className="stll-card overflow-hidden p-4 sm:p-5">
-            <AnalyticsTrendChart data={chartData} />
           </div>
         </section>
 
@@ -298,38 +181,31 @@ export default function AnalyticsPage() {
           </section>
         )}
 
-        {/* ── Expense categories (pie + table) ── */}
+        {/* ── Expense categories ── */}
         {catRows.length > 0 && (
           <section>
             <p className="stll-section-title">Expenses by category</p>
-            <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-              <div className="stll-card overflow-hidden p-4 sm:p-5">
-                <AnalyticsExpensePieChart data={expensePieData} total={totalExpenses} />
-              </div>
-              <div className="stll-card overflow-hidden shadow-none">
-                <table className="w-full text-sm">
-                  <thead className="stll-table-thead">
-                    <tr>
-                      <th className="px-4 py-3">Category</th>
-                      <th className="px-4 py-3 text-right">Total</th>
-                      <th className="px-4 py-3 text-right">% of expenses</th>
+            <div className="stll-card overflow-hidden shadow-none">
+              <table className="w-full text-sm">
+                <thead className="stll-table-thead">
+                  <tr>
+                    <th className="px-4 py-3">Category</th>
+                    <th className="px-4 py-3 text-right">Total</th>
+                    <th className="px-4 py-3 text-right">% of Expenses</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stll-charcoal/10">
+                  {catRows.map(([cat, amt]) => (
+                    <tr key={cat} className="hover:bg-stll-cream/40">
+                      <td className="px-4 py-3 text-stll-charcoal">{cat}</td>
+                      <td className="px-4 py-3 text-right font-semibold text-red-500">${amt.toFixed(2)}</td>
+                      <td className="px-4 py-3 text-right text-stll-muted">
+                        {totalExpenses > 0 ? Math.round((amt / totalExpenses) * 100) : 0}%
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stll-charcoal/10">
-                    {catRows.map(([cat, amt]) => (
-                      <tr key={cat} className="hover:bg-stll-cream/40">
-                        <td className="px-4 py-3 text-stll-charcoal">{cat}</td>
-                        <td className="px-4 py-3 text-right font-semibold text-stll-charcoal tabular-nums">
-                          ${amt.toFixed(2)}
-                        </td>
-                        <td className="px-4 py-3 text-right text-stll-muted">
-                          {totalExpenses > 0 ? Math.round((amt / totalExpenses) * 100) : 0}%
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
         )}

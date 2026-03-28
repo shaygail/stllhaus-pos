@@ -65,60 +65,71 @@ export default function TabsPage() {
   const totalIOwe = openTabs.filter((t) => t.direction === "i_owe").reduce((s, t) => s + t.amount, 0);
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="text-2xl font-bold text-cafe-dark">Tabs</h1>
+    <div className="stll-page">
+      <div className="stll-page-inner max-w-2xl">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <h1 className="stll-h1 mb-0">Tabs</h1>
           <button
-            onClick={() => { setShowForm((v) => !v); setFormError(""); }}
-            className="px-4 py-2 rounded-xl bg-cafe-brown text-white text-sm font-semibold hover:bg-cafe-dark transition-colors"
+            type="button"
+            onClick={() => {
+              setShowForm((v) => !v);
+              setFormError("");
+            }}
+            className="stll-btn-primary shrink-0 text-xs uppercase tracking-wide"
           >
-            + New Tab
+            New tab
           </button>
         </div>
 
-        {/* New tab form */}
         {showForm && (
-          <div className="bg-white rounded-2xl border border-beige-200 shadow-sm p-5 mb-5 space-y-3">
-            <h2 className="font-semibold text-cafe-dark">New Tab</h2>
+          <div className="stll-card mb-6 space-y-3 p-5">
+            <h2 className="text-sm font-medium text-stll-charcoal">New tab</h2>
 
-            {/* Direction toggle */}
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Direction *</label>
+              <label className="stll-section-title mb-2 block">Direction</label>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={() => setDirection("they_owe")}
-                  className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-colors ${direction === "they_owe" ? "bg-orange-500 text-white" : "bg-beige-100 text-cafe-warm hover:bg-beige-200"}`}
+                  className={`flex-1 rounded-lg border py-2.5 text-xs font-medium uppercase tracking-wide transition-colors ${
+                    direction === "they_owe"
+                      ? "border-stll-charcoal bg-stll-charcoal text-stll-cream"
+                      : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25"
+                  }`}
                 >
-                  They owe me 💸
+                  They owe me
                 </button>
                 <button
+                  type="button"
                   onClick={() => setDirection("i_owe")}
-                  className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-colors ${direction === "i_owe" ? "bg-blue-500 text-white" : "bg-beige-100 text-cafe-warm hover:bg-beige-200"}`}
+                  className={`flex-1 rounded-lg border py-2.5 text-xs font-medium uppercase tracking-wide transition-colors ${
+                    direction === "i_owe"
+                      ? "border-stll-sage bg-stll-sage/25 text-stll-charcoal"
+                      : "border-stll-charcoal/15 bg-white text-stll-muted hover:border-stll-charcoal/25"
+                  }`}
                 >
-                  I owe them 🙏
+                  I owe them
                 </button>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Name *</label>
+                <label className="block text-xs font-medium text-stll-muted mb-1">Name *</label>
                 <input
-                  className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown"
+                  className="stll-input"
                   placeholder="e.g. Kaye"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Amount *</label>
+                <label className="block text-xs font-medium text-stll-muted mb-1">Amount *</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cafe-warm text-sm">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stll-muted text-sm">$</span>
                   <input
                     type="number" min="0" step="0.01" placeholder="0.00"
-                    className="w-full border border-beige-300 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown"
+                    className="w-full border border-stll-charcoal/15 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -127,9 +138,9 @@ export default function TabsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Note (optional)</label>
+              <label className="block text-xs font-medium text-stll-muted mb-1">Note (optional)</label>
               <input
-                className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown"
+                className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50"
                 placeholder="e.g. 2x Matcha Latte, paid next time"
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
@@ -140,31 +151,36 @@ export default function TabsPage() {
 
             <div className="flex gap-3 pt-1">
               <button
+                type="button"
                 onClick={() => setShowForm(false)}
-                className="flex-1 py-2.5 text-sm font-semibold bg-beige-100 text-cafe-warm rounded-xl hover:bg-beige-200 transition-colors"
-              >Cancel</button>
+                className="stll-btn-secondary flex-1"
+              >
+                Cancel
+              </button>
               <button
+                type="button"
                 onClick={handleCreate}
                 disabled={saving}
-                className="flex-1 py-2.5 text-sm font-semibold bg-cafe-brown text-white rounded-xl hover:bg-cafe-dark disabled:opacity-60 transition-colors"
-              >{saving ? "Saving…" : "Open Tab"}</button>
+                className="stll-btn-primary flex-1"
+              >
+                {saving ? "Saving…" : "Open tab"}
+              </button>
             </div>
           </div>
         )}
 
-        {/* Summary strip */}
         {(totalOwed > 0 || totalIOwe > 0) && (
-          <div className="grid grid-cols-2 gap-3 mb-5">
+          <div className="mb-6 grid grid-cols-2 gap-3">
             {totalOwed > 0 && (
-              <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
-                <p className="text-xs font-semibold text-orange-600 uppercase tracking-widest">Owed to Me</p>
-                <p className="text-2xl font-bold text-orange-700 mt-1">${totalOwed.toFixed(2)}</p>
+              <div className="stll-card border-l-2 border-l-stll-accent p-4">
+                <p className="stll-section-title mb-1">Owed to you</p>
+                <p className="text-xl font-medium text-stll-charcoal tabular-nums">${totalOwed.toFixed(2)}</p>
               </div>
             )}
             {totalIOwe > 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
-                <p className="text-xs font-semibold text-blue-600 uppercase tracking-widest">I Owe</p>
-                <p className="text-2xl font-bold text-blue-700 mt-1">${totalIOwe.toFixed(2)}</p>
+              <div className="stll-card border-l-2 border-l-stll-sage p-4">
+                <p className="stll-section-title mb-1">You owe</p>
+                <p className="text-xl font-medium text-stll-charcoal tabular-nums">${totalIOwe.toFixed(2)}</p>
               </div>
             )}
           </div>
@@ -172,19 +188,18 @@ export default function TabsPage() {
 
         {/* Open tabs */}
         {loading ? (
-          <p className="text-cafe-warm text-center py-16 animate-pulse">Loading…</p>
+          <p className="text-stll-muted text-center py-16 animate-pulse">Loading…</p>
         ) : (
           <>
             {openTabs.length === 0 && settledTabs.length === 0 && (
-              <div className="text-center py-20 text-cafe-warm/50">
-                <p className="text-5xl mb-3">🤝</p>
-                <p>No tabs yet</p>
+              <div className="py-20 text-center text-stll-muted/60">
+                <p className="text-sm">No tabs yet.</p>
               </div>
             )}
 
             {openTabs.length > 0 && (
-              <div className="space-y-3 mb-6">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-cafe-warm">Open</p>
+              <div className="mb-6 space-y-3">
+                <p className="stll-section-title">Open</p>
                 {openTabs.map((tab) => (
                   <TabCard key={tab.id} tab={tab} onSettle={handleSettle} onReopen={handleReopen} onDelete={handleDelete} />
                 ))}
@@ -193,7 +208,7 @@ export default function TabsPage() {
 
             {settledTabs.length > 0 && (
               <div className="space-y-3">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-cafe-warm">Settled</p>
+                <p className="stll-section-title">Settled</p>
                 {settledTabs.map((tab) => (
                   <TabCard key={tab.id} tab={tab} onSettle={handleSettle} onReopen={handleReopen} onDelete={handleDelete} />
                 ))}
@@ -221,38 +236,63 @@ function TabCard({
   const isOpen = tab.status === "open";
 
   return (
-    <div className={`bg-white rounded-2xl border shadow-sm overflow-hidden ${isOpen ? (isTheyOwe ? "border-orange-200" : "border-blue-200") : "border-beige-200 opacity-70"}`}>
-      <div className={`px-4 py-1.5 text-xs font-bold uppercase tracking-widest ${isOpen ? (isTheyOwe ? "bg-orange-100 text-orange-600" : "bg-blue-100 text-blue-600") : "bg-beige-100 text-cafe-warm"}`}>
-        {isOpen ? (isTheyOwe ? "💸 They owe me" : "🙏 I owe them") : "✅ Settled"}
+    <div
+      className={`stll-card overflow-hidden ${isOpen ? "" : "opacity-70"} ${
+        isOpen ? (isTheyOwe ? "border-l-2 border-l-stll-accent" : "border-l-2 border-l-stll-sage") : ""
+      }`}
+    >
+      <div
+        className={`border-b border-stll-charcoal/10 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.16em] ${
+          isOpen
+            ? isTheyOwe
+              ? "bg-stll-cream/50 text-stll-charcoal"
+              : "bg-stll-sage/10 text-stll-charcoal"
+            : "bg-stll-cream/40 text-stll-muted"
+        }`}
+      >
+        {isOpen ? (isTheyOwe ? "They owe you" : "You owe") : "Settled"}
       </div>
-      <div className="px-4 py-3 flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="font-bold text-cafe-dark text-base">{tab.customer_name}</p>
-          <p className={`text-xl font-bold mt-0.5 ${isOpen ? (isTheyOwe ? "text-orange-600" : "text-blue-600") : "text-cafe-warm"}`}>
+      <div className="flex items-start justify-between gap-3 px-4 py-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-base font-medium text-stll-charcoal">{tab.customer_name}</p>
+          <p
+            className={`mt-0.5 text-xl font-medium tabular-nums ${
+              isOpen ? "text-stll-charcoal" : "text-stll-muted"
+            }`}
+          >
             ${tab.amount.toFixed(2)}
           </p>
-          {tab.description && <p className="text-xs text-cafe-warm mt-1">{tab.description}</p>}
-          <p className="text-[11px] text-cafe-warm/60 mt-1">
+          {tab.description && <p className="text-xs text-stll-muted mt-1">{tab.description}</p>}
+          <p className="text-[11px] text-stll-muted/60 mt-1">
             Opened {new Date(tab.date).toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })}
             {tab.settled_at && ` · Settled ${new Date(tab.settled_at).toLocaleDateString("en-NZ", { day: "numeric", month: "short" })}`}
           </p>
         </div>
-        <div className="flex flex-col gap-1.5 shrink-0">
+        <div className="flex shrink-0 flex-col gap-1.5">
           {isOpen ? (
             <button
+              type="button"
               onClick={() => onSettle(tab.id)}
-              className="px-3 py-1.5 text-xs font-semibold bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-            >✓ Settled</button>
+              className="rounded-lg bg-stll-charcoal px-3 py-1.5 text-xs font-medium text-stll-cream transition-colors hover:bg-stll-accent"
+            >
+              Mark settled
+            </button>
           ) : (
             <button
+              type="button"
               onClick={() => onReopen(tab.id)}
-              className="px-3 py-1.5 text-xs font-semibold bg-beige-200 text-cafe-dark rounded-lg hover:bg-beige-300 transition-colors"
-            >Re-open</button>
+              className="rounded-lg border border-stll-charcoal/15 bg-white px-3 py-1.5 text-xs font-medium text-stll-muted transition-colors hover:border-stll-charcoal/25 hover:text-stll-charcoal"
+            >
+              Re-open
+            </button>
           )}
           <button
+            type="button"
             onClick={() => onDelete(tab.id)}
-            className="px-3 py-1.5 text-xs font-semibold bg-red-50 text-red-400 rounded-lg hover:bg-red-100 transition-colors"
-          >Delete</button>
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-red-600/80 transition-colors hover:bg-red-50"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

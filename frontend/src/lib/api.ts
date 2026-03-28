@@ -1,6 +1,15 @@
 import { MenuItem, SalePayload, SaleResponse, PreOrderPayload, PreOrderResponse, ExpenseResponse } from "@/types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "/api";
+function apiBase(): string {
+  const raw = (process.env.NEXT_PUBLIC_API_URL ?? "/api").trim();
+  if (/^https?:\/\//i.test(raw)) {
+    return raw.replace(/\/+$/, "");
+  }
+  const withSlash = raw.startsWith("/") ? raw : `/${raw}`;
+  return withSlash.replace(/\/+$/, "") || "/api";
+}
+
+const API_BASE = apiBase();
 
 type MenuItemPayload = Omit<MenuItem, "id">;
 

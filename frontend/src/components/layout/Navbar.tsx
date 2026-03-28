@@ -7,6 +7,7 @@ const NAV = [
   { href: "/",                label: "POS" },
   { href: "/dashboard",      label: "Sales" },
   { href: "/menu-management", label: "Menu" },
+  { href: "/order-history",  label: "Bill/Order History" },
   { href: "/pre-orders",     label: "Pre-Orders" },
   { href: "/expenses",       label: "Expenses" },
   { href: "/funds",          label: "Funds" },
@@ -19,18 +20,20 @@ const NAV = [
 export default function Navbar() {
   const pathname = usePathname();
   return (
-    <nav className="h-14 bg-cafe-brown text-white flex items-center justify-between px-4 shadow-md shrink-0">
-      <span className="font-bold text-base tracking-wide">☕ STLL Haus</span>
-      <div className="flex gap-1">
+    <nav className="h-14 bg-white border-b border-stll-charcoal/10 flex items-center justify-between px-4 shrink-0">
+      <span className="font-display text-lg font-medium tracking-[0.2em] text-stll-charcoal uppercase">
+        STLL Haus
+      </span>
+      <div className="flex gap-0.5 overflow-x-auto">
         {NAV.map(({ href, label }) => (
           <Link
             key={href}
             href={href}
             className={clsx(
-              "px-4 py-2 rounded-lg text-sm font-semibold transition-all touch-manipulation",
+              "px-3 py-2 rounded-md text-xs font-medium transition-colors touch-manipulation whitespace-nowrap",
               pathname === href
-                ? "bg-white text-cafe-brown"
-                : "text-white/80 hover:bg-white/20"
+                ? "text-stll-charcoal bg-stll-cream"
+                : "text-stll-muted hover:text-stll-charcoal"
             )}
           >
             {label}

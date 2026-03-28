@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import delete as sql_delete, select, func, text
 
+from sqlalchemy import inspect as sa_inspect
+
 from app.db.session import engine, Base, get_db
 from app.db.models import Sale, MenuItemDB, Tab, InventoryItem, StockLog
 from app.api.routes import menu, sales, preorders, expenses, funds, tabs, inventory
@@ -29,13 +31,19 @@ DEFAULT_MENU = [
 ]
 
 
+async def _existing_column_names(conn, table: str) -> set[str]:
+    def fetch(sync_conn):
+        return {c["name"] for c in sa_inspect(sync_conn).get_columns(table)}
+
+    return await conn.run_sync(fetch)
+
+
 async def ensure_menu_availability_columns() -> None:
     async with engine.begin() as conn:
-        result = await conn.execute(text("""
-            SELECT column_name FROM information_schema.columns 
-            WHERE table_name = 'menu_items'
-        """))
-        existing_columns = {row[0] for row in result.fetchall()}
+        try:
+            existing_columns = await _existing_column_names(conn, "menu_items")
+        except Exception:
+            return
         if "is_hidden" not in existing_columns:
             await conn.execute(text("ALTER TABLE menu_items ADD COLUMN is_hidden BOOLEAN NOT NULL DEFAULT FALSE"))
         if "is_sold_out" not in existing_columns:
@@ -44,11 +52,10 @@ async def ensure_menu_availability_columns() -> None:
 
 async def ensure_sales_columns() -> None:
     async with engine.begin() as conn:
-        result = await conn.execute(text("""
-            SELECT column_name FROM information_schema.columns 
-            WHERE table_name = 'sales'
-        """))
-        existing_columns = {row[0] for row in result.fetchall()}
+        try:
+            existing_columns = await _existing_column_names(conn, "sales")
+        except Exception:
+            return
         if "daily_order_number" not in existing_columns:
             await conn.execute(text("ALTER TABLE sales ADD COLUMN daily_order_number INTEGER"))
         if "customer_name" not in existing_columns:

@@ -22,7 +22,7 @@ export default function ProductGrid({ items }: Props) {
     <div className="space-y-6">
       {categories.map((cat) => (
         <div key={cat}>
-          <h3 className="text-[11px] font-bold uppercase tracking-widest text-cafe-warm mb-2.5">
+          <h3 className="text-[10px] font-medium uppercase tracking-[0.2em] text-stll-muted mb-3">
             {cat}
           </h3>
           {/* 2 cols on small phones, 3 on larger phones, 4 on tablet/desktop */}

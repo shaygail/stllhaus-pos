@@ -167,72 +167,78 @@ export default function AssetsPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+    <div className="stll-page">
+      <div className="stll-page-inner max-w-5xl">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-cafe-dark">🏗️ Asset Records</h1>
-          <p className="text-sm text-cafe-warm mt-1">Equipment, fixtures, and long-term assets</p>
+          <h1 className="stll-h1">Assets</h1>
+          <p className="text-sm text-stll-muted">Equipment and long-term items</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
+            type="button"
             onClick={exportToCSV}
-            className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+            className="stll-btn-secondary text-xs uppercase tracking-wide"
           >
-            ⬇ Export CSV
+            Export CSV
           </button>
           <button
-            onClick={() => { setShowAdd(v => !v); setForm({ ...BLANK_FORM, date_purchased: todayStr() }); setAddError(""); }}
-            className="px-4 py-2 rounded-xl bg-cafe-brown text-white text-sm font-semibold hover:bg-cafe-dark transition-colors"
+            type="button"
+            onClick={() => {
+              setShowAdd((v) => !v);
+              setForm({ ...BLANK_FORM, date_purchased: todayStr() });
+              setAddError("");
+            }}
+            className="stll-btn-primary text-xs uppercase tracking-wide"
           >
-            + Register Asset
+            Register asset
           </button>
         </div>
       </div>
 
       {/* Add form */}
       {showAdd && (
-        <div className="bg-white rounded-2xl border border-beige-200 shadow-sm p-5 mb-5 space-y-3">
-          <h2 className="font-semibold text-cafe-dark">Register New Asset</h2>
+        <div className="bg-white rounded-lg border border-stll-charcoal/10 shadow-sm p-5 mb-5 space-y-3">
+          <h2 className="font-semibold text-stll-charcoal">Register New Asset</h2>
           <div className="space-y-3">
             <div className="col-span-2">
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Asset Name *</label>
-              <input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="e.g. Espresso Machine, Display Fridge" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+              <label className="block text-xs font-medium text-stll-muted mb-1">Asset Name *</label>
+              <input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="e.g. Espresso Machine, Display Fridge" className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Date Purchased</label>
-                <input type="date" value={form.date_purchased} onChange={e => setForm(f => ({...f, date_purchased: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                <label className="block text-xs font-medium text-stll-muted mb-1">Date Purchased</label>
+                <input type="date" value={form.date_purchased} onChange={e => setForm(f => ({...f, date_purchased: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Quantity *</label>
-                <input type="number" min="0" step="1" value={form.quantity} onChange={e => setForm(f => ({...f, quantity: e.target.value}))} placeholder="e.g. 1" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                <label className="block text-xs font-medium text-stll-muted mb-1">Quantity *</label>
+                <input type="number" min="0" step="1" value={form.quantity} onChange={e => setForm(f => ({...f, quantity: e.target.value}))} placeholder="e.g. 1" className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Unit *</label>
-                <select value={form.unit} onChange={e => setForm(f => ({...f, unit: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white">
+                <label className="block text-xs font-medium text-stll-muted mb-1">Unit *</label>
+                <select value={form.unit} onChange={e => setForm(f => ({...f, unit: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50 bg-white">
                   {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Cost per Unit</label>
+                <label className="block text-xs font-medium text-stll-muted mb-1">Cost per Unit</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cafe-warm text-sm">$</span>
-                  <input type="number" min="0" step="0.01" value={form.cost_per_unit} onChange={e => setForm(f => ({...f, cost_per_unit: e.target.value}))} placeholder="0.00" className="w-full border border-beige-300 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stll-muted text-sm">$</span>
+                  <input type="number" min="0" step="0.01" value={form.cost_per_unit} onChange={e => setForm(f => ({...f, cost_per_unit: e.target.value}))} placeholder="0.00" className="w-full border border-stll-charcoal/15 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
                 </div>
               </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-cafe-warm mb-1">Notes (optional)</label>
-              <input value={form.notes} onChange={e => setForm(f => ({...f, notes: e.target.value}))} placeholder="e.g. Serial #12345, warranty until 2027" className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+              <label className="block text-xs font-medium text-stll-muted mb-1">Notes (optional)</label>
+              <input value={form.notes} onChange={e => setForm(f => ({...f, notes: e.target.value}))} placeholder="e.g. Serial #12345, warranty until 2027" className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
             </div>
           </div>
           {addError && <p className="text-xs text-red-600">{addError}</p>}
           <div className="flex gap-3">
-            <button onClick={() => setShowAdd(false)} className="flex-1 py-2.5 text-sm font-semibold bg-beige-100 text-cafe-warm rounded-xl hover:bg-beige-200 transition-colors">Cancel</button>
-            <button onClick={handleAdd} disabled={addSaving} className="flex-1 py-2.5 text-sm font-semibold bg-cafe-brown text-white rounded-xl hover:bg-cafe-dark disabled:opacity-60 transition-colors">{addSaving ? "Saving…" : "Register"}</button>
+            <button onClick={() => setShowAdd(false)} className="flex-1 py-2.5 text-sm font-semibold bg-stll-cream/60 text-stll-muted rounded-xl hover:bg-stll-cream transition-colors">Cancel</button>
+            <button onClick={handleAdd} disabled={addSaving} className="flex-1 py-2.5 text-sm font-semibold bg-stll-charcoal text-white rounded-xl hover:bg-stll-accent disabled:opacity-60 transition-colors">{addSaving ? "Saving…" : "Register"}</button>
           </div>
         </div>
       )}
@@ -240,50 +246,50 @@ export default function AssetsPage() {
       {/* Edit modal */}
       {editItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <div className="bg-white rounded-lg shadow-sm p-6 max-w-md w-full space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-cafe-dark">Edit Asset</h2>
-              <button onClick={() => setEditItem(null)} className="text-cafe-warm hover:text-cafe-dark text-xl font-bold">✕</button>
+              <h2 className="text-lg font-bold text-stll-charcoal">Edit Asset</h2>
+              <button onClick={() => setEditItem(null)} className="text-stll-muted hover:text-stll-charcoal text-xl font-bold">✕</button>
             </div>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Asset Name</label>
-                <input value={editForm.name} onChange={e => setEditForm(f => ({...f, name: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                <label className="block text-xs font-medium text-stll-muted mb-1">Asset Name</label>
+                <input value={editForm.name} onChange={e => setEditForm(f => ({...f, name: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-cafe-warm mb-1">Date Purchased</label>
-                  <input type="date" value={editForm.date_purchased} onChange={e => setEditForm(f => ({...f, date_purchased: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                  <label className="block text-xs font-medium text-stll-muted mb-1">Date Purchased</label>
+                  <input type="date" value={editForm.date_purchased} onChange={e => setEditForm(f => ({...f, date_purchased: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-cafe-warm mb-1">Quantity</label>
-                  <input type="number" min="0" step="1" value={editForm.quantity} onChange={e => setEditForm(f => ({...f, quantity: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                  <label className="block text-xs font-medium text-stll-muted mb-1">Quantity</label>
+                  <input type="number" min="0" step="1" value={editForm.quantity} onChange={e => setEditForm(f => ({...f, quantity: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-cafe-warm mb-1">Unit</label>
-                  <select value={editForm.unit} onChange={e => setEditForm(f => ({...f, unit: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown bg-white">
+                  <label className="block text-xs font-medium text-stll-muted mb-1">Unit</label>
+                  <select value={editForm.unit} onChange={e => setEditForm(f => ({...f, unit: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50 bg-white">
                     {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-cafe-warm mb-1">Cost per Unit</label>
+                  <label className="block text-xs font-medium text-stll-muted mb-1">Cost per Unit</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cafe-warm text-sm">$</span>
-                    <input type="number" min="0" step="0.01" value={editForm.cost_per_unit} onChange={e => setEditForm(f => ({...f, cost_per_unit: e.target.value}))} className="w-full border border-beige-300 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stll-muted text-sm">$</span>
+                    <input type="number" min="0" step="0.01" value={editForm.cost_per_unit} onChange={e => setEditForm(f => ({...f, cost_per_unit: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
                   </div>
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-cafe-warm mb-1">Notes</label>
-                <input value={editForm.notes} onChange={e => setEditForm(f => ({...f, notes: e.target.value}))} className="w-full border border-beige-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cafe-brown" />
+                <label className="block text-xs font-medium text-stll-muted mb-1">Notes</label>
+                <input value={editForm.notes} onChange={e => setEditForm(f => ({...f, notes: e.target.value}))} className="w-full border border-stll-charcoal/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stll-accent/50" />
               </div>
             </div>
             {editError && <p className="text-xs text-red-600">{editError}</p>}
             <div className="flex gap-3">
-              <button onClick={() => setEditItem(null)} className="flex-1 py-2 text-sm font-semibold bg-beige-100 text-cafe-warm rounded-xl hover:bg-beige-200 transition-colors">Cancel</button>
-              <button onClick={handleEdit} disabled={editSaving} className="flex-1 py-2 text-sm font-semibold bg-cafe-brown text-white rounded-xl hover:bg-cafe-dark disabled:opacity-60 transition-colors">{editSaving ? "Saving…" : "Save"}</button>
+              <button onClick={() => setEditItem(null)} className="flex-1 py-2 text-sm font-semibold bg-stll-cream/60 text-stll-muted rounded-xl hover:bg-stll-cream transition-colors">Cancel</button>
+              <button onClick={handleEdit} disabled={editSaving} className="flex-1 py-2 text-sm font-semibold bg-stll-charcoal text-white rounded-xl hover:bg-stll-accent disabled:opacity-60 transition-colors">{editSaving ? "Saving…" : "Save"}</button>
             </div>
           </div>
         </div>
@@ -291,81 +297,82 @@ export default function AssetsPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-        <div className="bg-white rounded-2xl p-4 border border-beige-200 shadow-sm">
-          <p className="text-[11px] text-cafe-warm uppercase tracking-widest font-semibold">Total Assets</p>
-          <p className="text-3xl font-bold text-cafe-dark mt-2">{assets.length}</p>
+        <div className="bg-white rounded-lg p-4 border border-stll-charcoal/10 shadow-sm">
+          <p className="text-[11px] text-stll-muted uppercase tracking-widest font-semibold">Total Assets</p>
+          <p className="text-3xl font-bold text-stll-charcoal mt-2">{assets.length}</p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-beige-200 shadow-sm">
-          <p className="text-[11px] text-cafe-warm uppercase tracking-widest font-semibold">Total Value</p>
-          <p className="text-3xl font-bold text-cafe-dark mt-2">${totalAssetValue.toFixed(2)}</p>
+        <div className="bg-white rounded-lg p-4 border border-stll-charcoal/10 shadow-sm">
+          <p className="text-[11px] text-stll-muted uppercase tracking-widest font-semibold">Total Value</p>
+          <p className="text-3xl font-bold text-stll-charcoal mt-2">${totalAssetValue.toFixed(2)}</p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-beige-200 shadow-sm">
-          <p className="text-[11px] text-cafe-warm uppercase tracking-widest font-semibold">Average Value</p>
-          <p className="text-3xl font-bold text-cafe-dark mt-2">${assets.length > 0 ? (totalAssetValue / assets.length).toFixed(2) : "0.00"}</p>
+        <div className="bg-white rounded-lg p-4 border border-stll-charcoal/10 shadow-sm">
+          <p className="text-[11px] text-stll-muted uppercase tracking-widest font-semibold">Average Value</p>
+          <p className="text-3xl font-bold text-stll-charcoal mt-2">${assets.length > 0 ? (totalAssetValue / assets.length).toFixed(2) : "0.00"}</p>
         </div>
       </div>
 
       {/* Sort buttons */}
       <div className="flex gap-2 mb-4">
-        <button onClick={() => setSortBy("name")} className={`px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${sortBy === "name" ? "bg-cafe-brown text-white" : "bg-white border border-beige-200 text-cafe-warm hover:border-cafe-brown/50"}`}>📝 Name</button>
-        <button onClick={() => setSortBy("date")} className={`px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${sortBy === "date" ? "bg-cafe-brown text-white" : "bg-white border border-beige-200 text-cafe-warm hover:border-cafe-brown/50"}`}>📅 Date</button>
-        <button onClick={() => setSortBy("cost")} className={`px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${sortBy === "cost" ? "bg-cafe-brown text-white" : "bg-white border border-beige-200 text-cafe-warm hover:border-cafe-brown/50"}`}>💰 Cost</button>
+        <button onClick={() => setSortBy("name")} className={`px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${sortBy === "name" ? "bg-stll-charcoal text-white" : "bg-white border border-stll-charcoal/10 text-stll-muted hover:border-stll-charcoal/50"}`}>📝 Name</button>
+        <button onClick={() => setSortBy("date")} className={`px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${sortBy === "date" ? "bg-stll-charcoal text-white" : "bg-white border border-stll-charcoal/10 text-stll-muted hover:border-stll-charcoal/50"}`}>📅 Date</button>
+        <button onClick={() => setSortBy("cost")} className={`px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${sortBy === "cost" ? "bg-stll-charcoal text-white" : "bg-white border border-stll-charcoal/10 text-stll-muted hover:border-stll-charcoal/50"}`}>💰 Cost</button>
       </div>
 
       {/* Content */}
       {loading ? (
-        <p className="text-cafe-warm text-center py-12 animate-pulse">Loading assets…</p>
+        <p className="text-stll-muted text-center py-12 animate-pulse">Loading assets…</p>
       ) : assets.length === 0 ? (
-        <div className="text-center py-20 text-cafe-warm/50">
+        <div className="text-center py-20 text-stll-muted/50">
           <p className="text-5xl mb-3">🏗️</p>
           <p>No assets registered yet</p>
-          <button onClick={() => setShowAdd(true)} className="mt-4 px-4 py-2 rounded-lg bg-cafe-brown text-white text-sm font-semibold hover:bg-cafe-dark transition-colors">Register First Asset</button>
+          <button onClick={() => setShowAdd(true)} className="mt-4 px-4 py-2 rounded-lg bg-stll-charcoal text-white text-sm font-semibold hover:bg-stll-accent transition-colors">Register First Asset</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {sorted.map(asset => (
-            <div key={asset.id} className="bg-white rounded-2xl border border-beige-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div key={asset.id} className="bg-white rounded-lg border border-stll-charcoal/10 shadow-sm overflow-hidden hover:border-stll-charcoal/20 transition-colors">
               {/* Header */}
-              <div className="px-4 pt-4 pb-3 bg-gradient-to-r from-cafe-brown/10 to-transparent border-b border-beige-100">
+              <div className="px-4 pt-4 pb-3 bg-gradient-to-r from-stll-accent/10 to-transparent border-b border-stll-charcoal/10">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div className="min-w-0">
-                    <p className="font-bold text-cafe-dark text-lg leading-tight truncate">{asset.name}</p>
+                    <p className="font-bold text-stll-charcoal text-lg leading-tight truncate">{asset.name}</p>
                   </div>
-                  <span className="shrink-0 text-[10px] font-bold bg-cafe-brown/20 text-cafe-dark px-2 py-1 rounded-full">Equipment</span>
+                  <span className="shrink-0 text-[10px] font-bold bg-stll-charcoal/20 text-stll-charcoal px-2 py-1 rounded-full">Equipment</span>
                 </div>
-                {asset.notes && <p className="text-[11px] text-cafe-warm truncate">{asset.notes}</p>}
+                {asset.notes && <p className="text-[11px] text-stll-muted truncate">{asset.notes}</p>}
               </div>
 
               {/* Details */}
-              <div className="px-4 py-3 space-y-2 border-b border-beige-100">
+              <div className="px-4 py-3 space-y-2 border-b border-stll-charcoal/10">
                 <div className="flex justify-between items-center">
-                  <span className="text-[11px] text-cafe-warm uppercase tracking-wide font-semibold">Quantity</span>
-                  <p className="text-lg font-bold text-cafe-dark">{asset.quantity} <span className="text-xs text-cafe-warm">{asset.unit}</span></p>
+                  <span className="text-[11px] text-stll-muted uppercase tracking-wide font-semibold">Quantity</span>
+                  <p className="text-lg font-bold text-stll-charcoal">{asset.quantity} <span className="text-xs text-stll-muted">{asset.unit}</span></p>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[11px] text-cafe-warm uppercase tracking-wide font-semibold">Cost per Unit</span>
-                  <p className="text-base font-bold text-cafe-dark">${(asset.cost_per_unit ?? 0).toFixed(2)}</p>
+                  <span className="text-[11px] text-stll-muted uppercase tracking-wide font-semibold">Cost per Unit</span>
+                  <p className="text-base font-bold text-stll-charcoal">${(asset.cost_per_unit ?? 0).toFixed(2)}</p>
                 </div>
-                <div className="flex justify-between items-center pt-1 border-t border-beige-100">
-                  <span className="text-[11px] text-cafe-warm uppercase tracking-wide font-semibold">Total Value</span>
+                <div className="flex justify-between items-center pt-1 border-t border-stll-charcoal/10">
+                  <span className="text-[11px] text-stll-muted uppercase tracking-wide font-semibold">Total Value</span>
                   <p className="text-lg font-bold text-green-700">${((asset.cost_per_unit ?? 0) * asset.quantity).toFixed(2)}</p>
                 </div>
               </div>
 
               {/* Date */}
-              <div className="px-4 py-2 text-[11px] text-cafe-warm">
+              <div className="px-4 py-2 text-[11px] text-stll-muted">
                 Registered: <span className="font-semibold">{formatDate(asset.date_purchased)}</span>
               </div>
 
               {/* Actions */}
               <div className="px-4 pb-3 flex gap-2">
-                <button onClick={() => openEdit(asset)} className="flex-1 py-2 text-xs font-semibold rounded-lg bg-beige-100 text-cafe-warm hover:bg-beige-200 transition-colors">✏ Edit</button>
+                <button onClick={() => openEdit(asset)} className="flex-1 py-2 text-xs font-semibold rounded-lg bg-stll-cream/60 text-stll-muted hover:bg-stll-cream transition-colors">✏ Edit</button>
                 <button onClick={() => handleDelete(asset)} className="flex-1 py-2 text-xs font-semibold rounded-lg bg-red-50 text-red-400 hover:bg-red-100 transition-colors">🗑 Delete</button>
               </div>
             </div>
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
